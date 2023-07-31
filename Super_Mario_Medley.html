@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<meta charset="UTF-8">
+
+        <title>Super Mario Medley</title>
+
+        <style>
+            body {
+                background: #AAA;
+                color: darkslateblue;
+                font-size: 14px;
+                font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+                font-weight: 600;
+            }
+
+            #canvas {
+                background: #000;
+                display: block;
+                margin: auto;
+                margin-top: 110px;
+            }
+
+            div {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            select {
+                text-align: center;
+                border-radius: 10px;
+                background: lightcoral;
+                outline: none;
+                color: white;
+                font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .format {
+                margin: 10px;
+            }
+
+            button {
+                border-radius: 10px;
+            }
+
+            #challengeSlider {
+                margin-left: 10px;
+            }
+
+            button {
+                appearance: none;
+                background-color: #2ea44f;
+                border: 1px solid rgba(27, 31, 35, .15);
+                border-radius: 6px;
+                box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+                box-sizing: border-box;
+                color: #fff;
+                cursor: pointer;
+                display: inline-block;
+                font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 20px;
+                padding: 6px 16px;
+                position: relative;
+                text-align: center;
+                text-decoration: none;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+                vertical-align: middle;
+                white-space: nowrap;
+            }
+
+            button:focus:not(:focus-visible):not(.focus-visible) {
+                box-shadow: none;
+                outline: none;
+            }
+
+            button:hover {
+                background-color: #2c974b;
+            }
+
+            button:focus {
+                box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+                outline: none;
+            }
+
+            button:disabled {
+                background-color: #94d3a2;
+                border-color: rgba(27, 31, 35, .1);
+                color: rgba(255, 255, 255, .8);
+                cursor: default;
+            }
+
+            button:active {
+                background-color: #298e46;
+                box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+            }
+
+            @font-face {
+                font-family: smb;
+                src: url(fonts/smb.otf);
+            }
+
+            @font-face {
+                font-family: smb2;
+                src: url(fonts/smb2.ttf);
+            }
+
+            @font-face {
+                font-family: smb3;
+                src: url(fonts/smb3.ttf);
+            }
+        </style>
+    </head>
+
+    <body>
+        <canvas id="canvas" width="800" height="600"> </canvas> <br>
+        
+        <div>
+            <button id="playButton" class="format">Play</button>
+            <span class="format">Volume: <input type="range" min="0" max="100" value="0" id="volume"></span>
+            <button id="HowToPlay" class="format" onclick="alert('Super Mario Bros./Super Mario Bros.: The Lost Levels:\n &#8592; &#8594;: Move left and right\n &#8593;: Jump\n &#8595;: Crouch when Big\n Z: run\n X: Use Powerup\n P: Pause \n Return/Enter: Select\n Try pausing in the game and waiting to see what happens ☺')">How To Play</button> <br> <br>
+
+            <label class="format" for="challengeSelect">Choose a challenge:</label>
+            <select class="format" name="challengeSelect" id="challengeSelect">
+                <option value="None">None</option>
+                <option value="Randomizer">Randomizer</option>
+                <option value="EnemyRandomizer">Enemy Randomizer</option>
+                <option value="BlockRandomizer">Block Randomizer</option>
+                <option value="ItemRandomizer">Item Randomizer</option>
+                <option value="SpawnEnemy">Bricks Can Spawn Enemies</option>
+                <option value="ResetLevel">Reset Level</option>
+                <option value="RandomFirebar">Firebars Randomly Show On Blocks</option>
+                <option value="ChooseLevel">Level Select</option>
+                <option value="Blur">Blur</option>
+                <option value="Brightness">Brightness</option>
+                <option value="Contrast">Contrast</option>
+                <option value="Grayscale">Grayscale</option>
+                <option value="Hue">Hue</option>
+                <option value="Invert">Invert</option>
+                <option value="Opacity">Opacity</option>
+                <option value="Saturate">Saturate</option>
+                <option value="Sepia">Sepia</option>
+                <option value="Art">No Canvas Clear</option>
+                <option value="NoTime">No Time</option>
+                <option value="OneLife">One Life</option>
+                <option value="NoPowerups">No Powerups</option>
+                <option value="Shadow">Shadow</option>
+                <option value="MovingPlatform">Moving Platform</option>
+                <option value="HammerBros">All Hammer Bros</option>
+                <option value="Hammers">All Enemies Throw Hammers</option>
+                <option value="Bowser">All Enemies Are Bowser</option>
+                <option value="Flower">Mario Has Fire Flower</option>
+                <option value="Star">Mario Always Has Star</option>
+            </select>
+
+            <div class="format"> Challenge Slider: <input type="range" id="challengeSlider" min="0" max="100" value="0"> <span id="canUseChallengeSlider" class="format"></span> <br> <br> </div>
+        </div>
+
+        <script src="loadImages.js"></script>
+        <script src="otherFunctions.js"></script>
+        <script src="index.js"></script>
+        <script src="Super_Mario_Bros_Functions.js"></script>
+        <script src="Super_Mario_Bros.js"></script>
+        <script src="collection.js"></script>
+    </body>
+</html>
