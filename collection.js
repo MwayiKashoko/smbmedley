@@ -1,7 +1,7 @@
 "use strict";
 function Game() {
 	//this.type = type;
-	pathname = `file://${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}/games/${game}`;
+	pathname = `${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}/games/${game}`;
 	/*this.state = "title screen";
 	this.timeUntilPlay = 150;
 	this.canUpdate = true;
