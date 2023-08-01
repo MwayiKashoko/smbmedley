@@ -859,7 +859,9 @@ function Block(type, constantX, constantY, drawnX, drawnY, width, height, sounds
 	this.movingX = drawnX;
 	this.drawnY = drawnY;
 	this.width = width;
+	this.constantWidth = width;
 	this.height = height;
+	this.constantHeight = height;
 	this.contains = undefined;
 	this.used = false;
 	this.coinsLeft = 10;
@@ -2449,36 +2451,36 @@ Enemy.prototype = {
 		if (["Goomba", "BuzzyBeetle", "Spiny", "BulletBill", "RedCheepCheep", "GreenCheepCheep", "Podobo"].includes(this.type)) {
 				this.hitboxX = this.drawnX+10;
 				this.hitboxY = this.drawnY+15;
-				this.hitboxWidth = 20;
-				this.hitboxHeight = 10;
+				this.hitboxWidth = this.width/2;
+				this.hitboxHeight = this.height/4;
 		} else if (this.type.indexOf("Koopa") > -1 || this.type.indexOf("Paratroopa") > -1) {
 			if (!this.inShell) {
 				this.hitboxX = this.drawnX+5;
 				this.hitboxY = this.drawnY+20;
-				this.hitboxWidth = 30;
-				this.hitboxHeight = 30;
+				this.hitboxWidth = this.width*3/4;
+				this.hitboxHeight = this.height/2;
 			} else {
 				this.hitboxX = this.drawnX+5;
 				this.hitboxY = this.drawnY;
-				this.hitboxWidth = 30;
-				this.hitboxHeight = 30;
+				this.hitboxWidth = this.width*3/4;
+				this.hitboxHeight = this.height/2;
 			}
 		} else if (this.type.indexOf("Plant") > -1) {
 			this.hitboxX = this.drawnX+5;
 			this.hitboxY = this.drawnY+30;
-			this.hitboxWidth = 30;
-			this.hitboxHeight = 20;
+			this.hitboxWidth = this.width*3/4;
+			this.hitboxHeight = this.height/3;
 		} else if (this.type == "Bowser") {
 			this.hitboxX = this.drawnX+5;
 			this.hitboxY = this.drawnY+5;
-			this.hitboxWidth = 70;
-			this.hitboxHeight = 70;
+			this.hitboxWidth = this.width*7/8;
+			this.hitboxHeight = this.height*7/8;
 		} else if (this.type.indexOf("Lakitu") > -1) {
 			if (this.timeToThrowSpiny <=120) {
 				this.hitboxX = this.drawnX+5;
 				this.hitboxY = this.drawnY+15;
-				this.hitboxWidth = 30;
-				this.hitboxHeight = 35;
+				this.hitboxWidth = this.width*3/4;
+				this.hitboxHeight = this.height*7/8;
 			} else {
 				this.hitboxX = -1000;
 			}
@@ -2491,7 +2493,7 @@ Enemy.prototype = {
 			this.hitboxX = this.drawnX+4;
 			this.hitboxY = this.drawnY+this.height/2-5;
 			this.hitboxWidth = this.width-8;
-			this.hitboxHeight = 20;
+			this.hitboxHeight = this.height/2;
 		} else {
 			console.log("something is wrong");
 		}
@@ -2501,7 +2503,7 @@ Enemy.prototype = {
 	},
 
 	topMarioCollisions: function(mario) {
-		if (!mario.alive) {
+		if (!mario.alive || mario.clearedLevel) {
 			return;
 		}
 
@@ -2590,7 +2592,7 @@ Enemy.prototype = {
 	},
 
 	otherCollisions: function(object, mario) {
-		if (!this.alive || (object.constructor == Player && this.topMarioCollisions(object))) {
+		if (!this.alive || (object.constructor == Player && this.topMarioCollisions(object)) || object.clearedLevel) {
 			return false;
 		}
 
@@ -2951,7 +2953,7 @@ Powerup.prototype = {
 	},
 
 	collides: function(object, powerups) {
-		if (!object.alive) {
+		if (!object.alive || object.clearedLevel) {
 			return false;
 		}
 
@@ -3141,7 +3143,7 @@ Projectile.prototype = {
 	},
 
 	collides: function(object, mario) {
-		if (!object.alive) {
+		if (!object.alive || object.clearedLevel) {
 			return false;
 		}
 
