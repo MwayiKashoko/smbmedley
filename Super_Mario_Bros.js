@@ -43,6 +43,14 @@ const gameEngine = () => {
     let currentLocation = levels[level].areas[0];
     let mario = currentGame.mario;
     let randomized = false;
+    let codeUsed = false;
+
+    let code;
+    let address = [];
+    let replacement = [];
+
+    let a = 0;
+    let b = 0;
 
     //Logic for determining what happens when a key is pressed
     document.addEventListener("keydown", (key) => {
@@ -337,6 +345,8 @@ const gameEngine = () => {
             level = "1-1";
         }
 
+        currentLocation = levels[level].areas[0];
+
         levels[level].areas.forEach((areas, k, place) => {
             place[k].pair = null;
 
@@ -348,7 +358,7 @@ const gameEngine = () => {
                     let pulleyPair = arr[i].pulleyPair;
                     let connection = arr[i].connection;
 
-                    arr[i] = new Block(block.storedType, block.constantX, block.constantY, block.constantX, block.constantY, block.width, block.height, sounds, block.terrain);
+                    arr[i] = new Block(block.storedType, block.constantX, block.constantY, block.constantX, block.constantY, block.constantWidth, block.constantHeight, sounds, block.terrain);
 
                     arr[i].canEnter = canEnter;
                     arr[i].isEdge = isEdge;
@@ -476,6 +486,8 @@ const gameEngine = () => {
         powerups = [];
         fireballs = [];
         flames = [];
+
+        currentLocation = levels[level].areas[0];
     }
 
     const changeLocation = () => {
@@ -752,7 +764,7 @@ const gameEngine = () => {
                 let pulleyPair = arr[i].pulleyPair;
                 let connection = arr[i].connection;
 
-                arr[i] = new Block(block.storedType, block.constantX, block.constantY, block.constantX, block.constantY, block.width, block.height, sounds, block.terrain);
+                arr[i] = new Block(block.storedType, block.constantX, block.constantY, block.constantX, block.constantY, block.constantWidth, block.constantHeight, sounds, block.terrain);
 
                 arr[i].drawnX -= newX;
                 arr[i].movingX -= newX;
@@ -781,29 +793,27 @@ const gameEngine = () => {
             currentLocation.background.drawnX -= newX;
         }
 
-        if (currentLocation.enemies != null) {
-            let canResetEnemy = true;
+        let canResetEnemy = true;
 
-            currentLocation.enemies.forEach((enemy, i, arr) => {
-                if (canResetEnemy) {
-                    arr[i] = new Enemy(enemy.constantX, enemy.constantY, enemy.constantWidth, enemy.constantHeight, enemy.storedType, gravity, sounds, currentLocation.terrain, enemy.animated);
-                }
+        currentLocation.enemies.forEach((enemy, i, arr) => {
+            if (canResetEnemy) {
+                arr[i] = new Enemy(enemy.constantX, enemy.constantY, enemy.constantWidth, enemy.constantHeight, enemy.storedType, gravity, sounds, currentLocation.terrain, enemy.animated);
+            }
 
-                if (arr[i].drawnX == -1000) {
-                    canResetEnemy = false;
-                    currentLocation.enemies.length = i+1;
-                }
-            });
+            if (arr[i].drawnX == -1000) {
+                canResetEnemy = false;
+                currentLocation.enemies.length = i+1;
+            }
+        });
 
-            for (let i = 0; i < currentLocation.enemies.length; i++) {
-                let enemy = currentLocation.enemies[i];
+        for (let i = 0; i < currentLocation.enemies.length; i++) {
+            let enemy = currentLocation.enemies[i];
 
-                if (enemy.drawnX != -1000) {
-                    enemy.drawnX -= newX;
-                    enemy.movingX -= newX;
+            if (enemy.drawnX != -1000) {
+                enemy.drawnX -= newX;
+                enemy.movingX -= newX;
 
-                    enemy.hitboxX -= newX;
-                }
+                enemy.hitboxX -= newX;
             }
         }
 
@@ -855,7 +865,7 @@ const gameEngine = () => {
                     let pulleyPair = arr[i].pulleyPair;
                     let connection = arr[i].connection;
 
-                    arr[i] = new Block(block.storedType, block.constantX, block.constantY, block.constantX, block.constantY, block.width, block.height, sounds, block.terrain);
+                    arr[i] = new Block(block.storedType, block.constantX, block.constantY, block.constantX, block.constantY, block.constantWidth, block.constantHeight, sounds, block.terrain);
 
                     arr[i].drawnX -= newX;
                     arr[i].movingX -= newX;
@@ -884,26 +894,24 @@ const gameEngine = () => {
                 currentLocation.background.drawnX -= newX;
             }
 
-            if (currentLocation.enemies != null) {
-                let canResetEnemy = true;
-                currentLocation.enemies.forEach((enemy, i, arr) => {
-                    if (canResetEnemy) {
-                        arr[i] = new Enemy(enemy.constantX, enemy.constantY, enemy.constantWidth, enemy.constantHeight, enemy.storedType, gravity, sounds, enemy.terrain, enemy.animated);
-                    }
+            let canResetEnemy = true;
+            currentLocation.enemies.forEach((enemy, i, arr) => {
+                if (canResetEnemy) {
+                    arr[i] = new Enemy(enemy.constantX, enemy.constantY, enemy.constantWidth, enemy.constantHeight, enemy.storedType, gravity, sounds, enemy.terrain, enemy.animated);
+                }
 
-                    if (arr[i].drawnX == -1000) {
-                        canResetEnemy = false;
-                        currentLocation.enemies.length = i + 1;
-                    }
-                });
+                if (arr[i].drawnX == -1000) {
+                    canResetEnemy = false;
+                    currentLocation.enemies.length = i + 1;
+                }
+            });
 
-                for (let i = 0; i < currentLocation.enemies.length; i++) {
-                    let enemy = currentLocation.enemies[i];
+            for (let i = 0; i < currentLocation.enemies.length; i++) {
+                let enemy = currentLocation.enemies[i];
 
-                    if (enemy.drawnX != 1000) {
-                        enemy.drawnX -= newX;
-                        enemy.hitboxX -= newX;
-                    }
+                if (enemy.drawnX != 1000) {
+                    enemy.drawnX -= newX;
+                    enemy.hitboxX -= newX;
                 }
             }
         }
@@ -1903,6 +1911,212 @@ const gameEngine = () => {
 
         if (option != "None") {
             switch (option) {
+                case "GameGenie1":
+                    if (true) {
+                        let memory = ["width", "height", "isBig", "hasFireFlower", "hasStar", "invincibilty", "isJumping", "isOnGround", 
+                            "falling", "isRunning", "isWalking", "isCrouching", "lives", "constantLives", 
+                            "velX", "maxCrouchingSpeed", "underwaterMultiplier", "maxSwimmingSpeed",
+                             "maxWalkingSpeed", "maxRunningSpeed", "velY", "lastVelY", "friction", "canMoveLeft", "canMoveRight", "alive", 
+                             "hitBlock", "throwingFireball", "enemyStreak", "score", "stompedOnEnemy", "coins", 
+                             "leftPressed", "rightPressed", "upPressed", "downPressed", "zPressed", "xPressed", "onSpring", "springVelocity", 
+                             "swimming", "movingX", "constantWidth", "constantHeight",
+                             "used", "coinsLeft", "timeUntilNoMoreCoins", "firstHit", "bumping", "bumpingY", "bumpTime", "isEdge", "time", 
+                             , "hasCollisions", "fold", "folding", "fallingSpeed", 
+                             "maxSpeed", "ableToMoveRight", "timeUntilCollisions", "changedDirections", "moving", 
+                             "lastGroundY", "inShell", "timeToKick", "gettingUp", "timeToGetUp", "isStanding", "timeUntilGone", "hit", "hitWall", 
+                             "timeToHit", "bufferTime", "collisions", "gone", "canMove", "canStomp", "canMoveUp", 
+                             "affectedByGravity", "isFlying", "timeToCollide", "timeToJump", "hitsToKill", "canDieByFire", 
+                             "canBounce", "hammersLeft", "throwing", "flying", "horizontal",
+                             "targetY", "condition", "risen", "hitboxX", 
+                             "hitboxY", "hitboxWidth", "hitboxHeight"];
+
+                        if (!codeUsed) {
+                            codeUsed = true;
+
+                            code = prompt("Enter any text that is longer than 4 letters/digits long. (The more the better))");
+
+                            if (code.length >= 4) {
+                                for (let i = 0; i < code.length; i++) {
+                                    if (code.substring(i*4, 2+i*4).length == 2) {
+                                        address.push(code.substring(i*4, 2+i*4));
+                                    }
+
+                                    if (code.substring(i*4+2, (i+1)*4).length == 2) {
+                                        replacement.push(code.substring(i*4+2, (i+1)*4));
+                                    }
+                                }
+                            }
+
+                            address.length = replacement.length;
+                            
+                            address.forEach((addy, j, arr) => {
+                                a = 0;
+                                b = 0;
+
+                                for (let i = 0; i < addy.length; i++) {
+                                    a += arr[j].charCodeAt(i);
+                                    b += replacement[j].charCodeAt(i);
+                                }
+
+                                arr[j] = a%memory.length;
+                                replacement[j] = b;
+                            });
+                        }
+
+                        address.forEach((value, j, mem) => {
+                            mario[memory[mem[j]]] = b;
+
+                            currentLocation.enemies.forEach((enemy, i, arr) => {
+                                arr[i][memory[mem[j]]] = replacement[j];
+                            });
+
+                            currentLocation.area.forEach(row => {
+                                row.forEach((block, i, arr) => {
+                                    arr[i][memory[mem[j]]] = replacement[j];
+                                });
+                            });
+
+                            powerups.forEach((powerup, i, arr) => {
+                                arr[i][memory[mem[j]]] = replacement[j];
+                            });
+
+                            fireballs.forEach((fireball, i, arr) => {
+                                arr[i][memory[mem[j]]] = replacement[j];
+                            });
+
+                            flames.forEach((flame, i, arr) => {
+                                arr[i][memory[mem[j]]] = replacement[j];
+                            });
+
+                            debris.forEach((debris, i, arr) => {
+                                arr[i][memory[mem[j]]] = replacement[j];
+                            });
+
+                            fireworks.forEach((fireworks, i, arr) => {
+                                arr[i][memory[mem[j]]] = replacement[j];
+                            });
+                        });
+                    }
+                break;
+
+                case "GameGenie2":
+                    if (true) {
+                        let memory = ["width", "height", "isBig", "hasFireFlower", "hasStar", "invincibilty", "isJumping", "isOnGround", 
+                            "falling", "isRunning", "isWalking", "isCrouching", "lives", "constantLives", 
+                            "velX", "maxCrouchingSpeed", "underwaterMultiplier", "maxSwimmingSpeed",
+                             "maxWalkingSpeed", "maxRunningSpeed", "velY", "lastVelY", "friction", "canMoveLeft", "canMoveRight", "alive", 
+                             "hitBlock", "throwingFireball", "enemyStreak", "score", "stompedOnEnemy", "coins", 
+                             "leftPressed", "rightPressed", "upPressed", "downPressed", "zPressed", "xPressed", "onSpring", "springVelocity", 
+                             "swimming", "movingX", "constantWidth", "constantHeight",
+                             "used", "coinsLeft", "timeUntilNoMoreCoins", "firstHit", "bumping", "bumpingY", "bumpTime", "isEdge", "time", 
+                             , "hasCollisions", "fold", "folding", "fallingSpeed", 
+                             "maxSpeed", "ableToMoveRight", "timeUntilCollisions", "changedDirections", "moving", 
+                             "lastGroundY", "inShell", "timeToKick", "gettingUp", "timeToGetUp", "isStanding", "timeUntilGone", "hit", "hitWall", 
+                             "timeToHit", "bufferTime", "collisions", "gone", "canMove", "canStomp", "canMoveUp", 
+                             "affectedByGravity", "isFlying", "timeToCollide", "timeToJump", "hitsToKill", "canDieByFire", 
+                             "canBounce", "hammersLeft", "throwing", "flying", "horizontal",
+                             "targetY", "condition", "risen", "hitboxX", 
+                             "hitboxY", "hitboxWidth", "hitboxHeight"];
+
+                        let bitwise = {
+                            0: function(a, b) {
+                                return a & b;
+                            },
+                            
+                            1: function(a, b) {
+                                return a | b;
+                            },
+                            
+                            2: function(a, b) {
+                                return a ^ b;
+                            },
+
+                            3: function(a) {
+                                return ~a;
+                            },
+
+                            4: function(a, b) {
+                                return a << b;
+                            },
+
+                            5: function(a, b) {
+                                return a >> b;
+                            },
+
+                            6: function(a, b) {
+                                return a >>> b;
+                            },
+                        };
+
+                        if (!codeUsed) {
+                            codeUsed = true;
+
+                            code = prompt("Enter any text that is longer than 4 letters/digits long. (The more the better)");
+
+                            if (code.length >= 4) {
+                                for (let i = 0; i < code.length; i++) {
+                                    if (code.substring(i*4, 2+i*4).length == 2) {
+                                        address.push(code.substring(i*4, 2+i*4));
+                                    }
+
+                                    if (code.substring(i*4+2, (i+1)*4).length == 2) {
+                                        replacement.push(code.substring(i*4+2, (i+1)*4));
+                                    }
+                                }
+                            }
+
+                            address.length = replacement.length;
+                            
+                            address.forEach((addy, j, arr) => {
+                                a = 0;
+                                b = 0;
+
+                                for (let i = 0; i < addy.length; i++) {
+                                    a += arr[j].charCodeAt(i);
+                                    b += replacement[j].charCodeAt(i);
+                                }
+
+                                arr[j] = a%memory.length;
+                                replacement[j] = b;
+                            });
+                        }
+
+                        address.forEach((value, j, mem) => {
+                            mario[memory[mem[j]]] = bitwise[replacement[j]%7](mario[memory[mem[j]]], replacement[j]);
+
+                            currentLocation.enemies.forEach((enemy, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            currentLocation.area.forEach(row => {
+                                row.forEach((block, i, arr) => {
+                                    arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                });
+                            });
+
+                            powerups.forEach((powerup, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            fireballs.forEach((fireball, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            flames.forEach((flame, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            debris.forEach((debris, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            fireworks.forEach((fireworks, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+                        });
+                    }
+                break;
+
                 case "Randomizer":
                     if (!randomized) {
                         randomized = true;
@@ -1911,12 +2125,10 @@ const gameEngine = () => {
 
                         randomized = true;
 
-                        if (currentLocation.enemies != null) {
-                            currentLocation.enemies.forEach((enemy, i, arr) => {
-                                arr[i] = new Enemy(arr[i].constantX, arr[i].constantY, arr[i].width, arr[i].height, array[random(0, array.length-1)], currentGame.gravity, sounds, currentLocation.terrain);
-                                arr[i].drawnY -= 50;
-                            });
-                        }
+                        currentLocation.enemies.forEach((enemy, i, arr) => {
+                            arr[i] = new Enemy(arr[i].constantX, arr[i].constantY, arr[i].width, arr[i].height, array[random(0, array.length-1)], currentGame.gravity, sounds, currentLocation.terrain);
+                            arr[i].drawnY -= 50;
+                        });
 
                         array = ["0","2","3","q","p","r","b","*","s",
                                  "{","}","/","|","g","^","+","-","v","=",
@@ -1927,7 +2139,7 @@ const gameEngine = () => {
                         currentLocation.area.forEach(row => {
                             row.forEach((block, i, arr) => {
                                 if (block.hasCollisions && !block.canEnter && !["Flagpole", "FullRedSpring", "FullGreenSpring", "6", "Bridge"].includes(block.type) && block.contains != "Vine") {
-                                    arr[i] = new Block(array[random(0, array.length-1)], block.constantX, block.constantY, block.constantX, block.constantY, block.width, block.height, sounds, currentLocation.terrain);
+                                    arr[i] = new Block(array[random(0, array.length-1)], block.constantX, block.constantY, block.constantX, block.constantY, block.constantWidth, block.constantHeight, sounds, currentLocation.terrain);
                                     arr[i].isEdge = false;
                                 }
                             })
@@ -1959,12 +2171,11 @@ const gameEngine = () => {
 
                         randomized = true;
 
-                        if (currentLocation.enemies != null) {
-                            currentLocation.enemies.forEach((enemy, i, arr) => {
-                                arr[i] = new Enemy(arr[i].constantX, arr[i].constantY, arr[i].width, arr[i].height, array[random(0, array.length-1)], currentGame.gravity, sounds, currentLocation.terrain);
-                                arr[i].drawnY -= 50;
-                            });
-                        }
+
+                        currentLocation.enemies.forEach((enemy, i, arr) => {
+                            arr[i] = new Enemy(arr[i].constantX, arr[i].constantY, arr[i].width, arr[i].height, array[random(0, array.length-1)], currentGame.gravity, sounds, currentLocation.terrain);
+                            arr[i].drawnY -= 50;
+                        });
                     }
                 break;
 
@@ -1981,7 +2192,7 @@ const gameEngine = () => {
                         currentLocation.area.forEach(row => {
                             row.forEach((block, i, arr) => {
                                 if (block.hasCollisions && !block.canEnter && !["Flagpole", "FullRedSpring", "FullGreenSpring", "6", "Bridge"].includes(block.type) && block.contains != "Vine") {
-                                    arr[i] = new Block(array[random(0, array.length-1)], block.constantX, block.constantY, block.constantX, block.constantY, block.width, block.height, sounds, currentLocation.terrain);
+                                    arr[i] = new Block(array[random(0, array.length-1)], block.constantX, block.constantY, block.constantX, block.constantY, block.constantWidth, block.constantHeight, sounds, currentLocation.terrain);
                                     arr[i].isEdge = false;
                                 }
                             })
@@ -1997,7 +2208,7 @@ const gameEngine = () => {
 
                         currentLocation.area.forEach(row => {
                             row.forEach((block, i, arr) => {
-                                if (block.type.indexOf("Brick") > -1 || block.type.indexOf("QuestionBlock") > -1) {
+                                if ((block.type.indexOf("Brick") > -1 || block.type.indexOf("QuestionBlock") > -1) && block.contains != "Vine") {
                                     if (!random(0, challengeSlider.value)) {
                                         arr[i].contains = array[random(0, array.length-1)];
                                     } else {
@@ -2011,6 +2222,83 @@ const gameEngine = () => {
                     challengeSlider.min = 0;
                     challengeSlider.max = 10;
                     canUse = true;
+                break;
+
+                case "PoisonCoins":
+                    currentLocation.area.forEach(row => {
+                        row.forEach((block, i, arr) => {
+                            if (block.type == "Coin") {
+                                if (canUpdate && mario.invincibility <= 0 && arr[i].collides(mario)) {
+                                    mario.hit();
+                                }
+                            }
+                        });
+                    });
+                break;
+
+                case "EnemySky":
+                    challengeSlider.min = 0;
+                    challengeSlider.max = 1000;
+                    canUse = true;
+
+                    if (time%challengeSlider.value == 0) {
+                        const array = ["G", "K", "B", "Q", "W", "E", "L", "P", "F", "I", "H", "R", "D", "T", "U", "A", "S"];
+
+                        currentLocation.enemies.push(new Enemy(random(0, newWidth-80), -100, 40, 40, array[random(0, array.length-1)], gravity, sounds, currentLocation.terrain, null));
+                    }
+                break;
+
+                case "PoisonSky":
+                    challengeSlider.min = 0;
+                    challengeSlider.max = 1000;
+                    canUse = true;
+
+                    if (time%challengeSlider.value == 0) {
+                        powerups.push(new Powerup(random(0, newWidth-40), -80, "PoisonMushroom", gravity, music, sounds, currentLocation.terrain));
+                    }
+                break;
+
+                case "AliceInWonderLand1":
+                    challengeSlider.min = 50;
+                    challengeSlider.max = 300;
+                    canUse = true;
+
+                    currentLocation.enemies.forEach((enemy, i, arr) => {
+                        if (arr[i].constantWidth*challengeSlider.value/100 != arr[i].width) {
+                            arr[i].width = arr[i].constantWidth*challengeSlider.value/100;
+                            arr[i].height = arr[i].constantHeight*challengeSlider.value/100;
+                            arr[i].drawnY -= arr[i].height-arr[i].constantHeight;
+                        }
+                    });
+
+                    currentLocation.area.forEach(row => {
+                        row.forEach((block, i, arr) => {
+                            if (arr[i].constantWidth*challengeSlider.value/100 != arr[i].width) {
+                                arr[i].width = arr[i].constantWidth*challengeSlider.value/100;
+                                arr[i].height = arr[i].constantHeight*challengeSlider.value/100;
+                            }
+                        });
+                    });
+                break;
+
+                case "AliceInWonderLand2":
+                    if (!randomized) {
+                        randomized = true;
+
+                        currentLocation.enemies.forEach((enemy, i, arr) => {
+                            arr[i].width = arr[i].constantWidth*random(50, 300)/100;
+                            arr[i].height = arr[i].constantHeight*random(50, 300)/100;
+
+                            arr[i].drawnY -= arr[i].height-arr[i].constantHeight;
+                        });
+
+                        currentLocation.area.forEach(row => {
+                            row.forEach((block, i, arr) => {
+                                arr[i].width = arr[i].constantWidth*random(50, 300)/100;
+                                arr[i].height = arr[i].constantHeight*random(50, 300)/100;
+                            });
+                        });
+                    }
                 break;
 
                 case "ResetLevel":
@@ -2072,6 +2360,28 @@ const gameEngine = () => {
                         currentLocation = levels[level].areas[0];
                         reset();
                         challengeSelect.value = "None";
+                    }
+                break;
+
+                case "NoFriction":
+                    challengeSlider.min = 0;
+                    challengeSlider.max = 100;
+                    canUse = true;
+
+                    mario.friction = challengeSlider.value/100;
+                break;
+
+                case "Poison":
+                    if (!randomized) {
+                        randomized = true;
+
+                        currentLocation.area.forEach(row => {
+                            row.forEach((block, i, arr) => {
+                                if ((block.type.indexOf("Brick") > -1 || block.type.indexOf("QuestionBlock") > -1) && block.contains != "Vine") {
+                                    arr[i].contains = "PoisonMushroom";
+                                }
+                            });
+                        });
                     }
                 break;
 
@@ -2194,14 +2504,12 @@ const gameEngine = () => {
                 break;
 
                 case "HammerBros":
-                    if (currentLocation.enemies != null) {
-                        currentLocation.enemies.forEach((enemy, i, arr) => {
-                            if (arr[i].type != "HammerBros") {
-                                arr[i].type = "HammerBros";
-                                arr[i].drawnY -= 30;
-                            }
-                        })
-                    }
+                    currentLocation.enemies.forEach((enemy, i, arr) => {
+                        if (arr[i].type != "HammerBros") {
+                            arr[i].type = "HammerBros";
+                            arr[i].drawnY -= 30;
+                        }
+                    })
                 break;
 
                 case "Hammers":
@@ -2209,84 +2517,80 @@ const gameEngine = () => {
                     challengeSlider.max = 2;
                     canUse = true;
 
-                    if (currentLocation.enemies != null) {
-                        currentLocation.enemies.forEach((enemy, i, arr) => {
-                            if (enemy.type != "HammerBros" && enemy.type != "Bowser") {
-                                if (challengeSlider.value == 0) {
-                                    if (canUpdate) {
-                                        arr[i].timeToThrow--;
-                                    }
+                    currentLocation.enemies.forEach((enemy, i, arr) => {
+                        if (enemy.type != "HammerBros" && enemy.type != "Bowser") {
+                            if (challengeSlider.value == 0) {
+                                if (canUpdate) {
+                                    arr[i].timeToThrow--;
+                                }
 
-                                    if (enemy.timeToThrow < 20) {
-                                        arr[i].throwing = true;
-                                    } else {
-                                        arr[i].throwing = false;
-                                    }
-
-                                    if (enemy.timeToThrow <= 0 && enemy.drawnX <= newWidth && enemy.alive) {
-                                        arr[i].hammersLeft--;
-
-                                        if (enemy.hammersLeft <= 0) {
-                                            arr[i].timeToThrow = 70;
-                                            arr[i].hammersLeft = random(3, 7);
-                                        } else {
-                                            arr[i].timeToThrow = 40;
-                                        }
-
-                                        arr[i].hammers.push(new Projectile("Hammer", arr[i].drawnX, arr[i].drawnY, arr[i].directionFacing, 1, sounds));
-                                    }
-                                } else if (challengeSlider.value == 1) {
-                                    if (canUpdate) {
-                                        arr[i].timeToShootFlame--;
-                                    }
-
-                                    if (enemy.timeToShootFlame <= 0 && enemy.alive && enemy.drawnX <= 600) {
-                                        flames.push(new Projectile("BowserFlame", enemy.directionFacing == "left" ? enemy.drawnX : enemy.drawnX+enemy.width, enemy.drawnY+30, enemy.directionFacing, 0, sounds));
-                                        sounds[13].currentTime = 0;
-                                        sounds[13].play();
-
-                                        arr[i].timeToShootFlame = 300;
-                                    }
+                                if (enemy.timeToThrow < 20) {
+                                    arr[i].throwing = true;
                                 } else {
-                                    if (canUpdate) {
-                                        arr[i].timeToThrow--;
-                                    }
+                                    arr[i].throwing = false;
+                                }
 
-                                    if (enemy.timeToThrow < 5) {
-                                        arr[i].throwing = true;
+                                if (enemy.timeToThrow <= 0 && enemy.drawnX <= newWidth && enemy.alive) {
+                                    arr[i].hammersLeft--;
+
+                                    if (enemy.hammersLeft <= 0) {
+                                        arr[i].timeToThrow = 70;
+                                        arr[i].hammersLeft = random(3, 7);
                                     } else {
-                                        arr[i].throwing = false;
+                                        arr[i].timeToThrow = 40;
                                     }
 
-                                    if (enemy.timeToThrow <= 0) {
-                                        arr[i].hammers.push(new Projectile("Hammer", enemy.drawnX, enemy.drawnY, enemy.directionFacing, 1, enemy.sounds));
+                                    arr[i].hammers.push(new Projectile("Hammer", arr[i].drawnX, arr[i].drawnY, arr[i].directionFacing, 1, sounds));
+                                }
+                            } else if (challengeSlider.value == 1) {
+                                if (canUpdate) {
+                                    arr[i].timeToShootFlame--;
+                                }
 
-                                        if (enemy.hammersLeft <= 0) {
-                                            enemy.hammersLeft = random(3, 7);
-                                            enemy.timeToThrow = 40;
-                                        } else {
-                                            enemy.hammersLeft--;
-                                            enemy.timeToThrow = 10;
-                                        }
+                                if (enemy.timeToShootFlame <= 0 && enemy.alive && enemy.drawnX <= 600) {
+                                    flames.push(new Projectile("BowserFlame", enemy.directionFacing == "left" ? enemy.drawnX : enemy.drawnX+enemy.width, enemy.drawnY+30, enemy.directionFacing, 0, sounds));
+                                    sounds[13].currentTime = 0;
+                                    sounds[13].play();
+
+                                    arr[i].timeToShootFlame = 300;
+                                }
+                            } else {
+                                if (canUpdate) {
+                                    arr[i].timeToThrow--;
+                                }
+
+                                if (enemy.timeToThrow < 5) {
+                                    arr[i].throwing = true;
+                                } else {
+                                    arr[i].throwing = false;
+                                }
+
+                                if (enemy.timeToThrow <= 0) {
+                                    arr[i].hammers.push(new Projectile("Hammer", enemy.drawnX, enemy.drawnY, enemy.directionFacing, 1, enemy.sounds));
+
+                                    if (enemy.hammersLeft <= 0) {
+                                        enemy.hammersLeft = random(3, 7);
+                                        enemy.timeToThrow = 40;
+                                    } else {
+                                        enemy.hammersLeft--;
+                                        enemy.timeToThrow = 10;
                                     }
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 break;
 
                 case "Bowser":
-                    if (currentLocation.enemies != null) {
-                        currentLocation.enemies.forEach((enemy, i, arr) => {
-                            if (arr[i].type != "Bowser") {
-                                arr[i].type = "Bowser";
-                                arr[i].width = 80;
-                                arr[i].height = 80;
-                                arr[i].canStomp = false;
-                                arr[i].drawnY -= 50;
-                            }
-                        })
-                    }
+                    currentLocation.enemies.forEach((enemy, i, arr) => {
+                        if (arr[i].type != "Bowser") {
+                            arr[i].type = "Bowser";
+                            arr[i].width = 80;
+                            arr[i].height = 80;
+                            arr[i].canStomp = false;
+                            arr[i].drawnY -= 50;
+                        }
+                    });
                 break;
 
                 case "Flower":
@@ -2313,6 +2617,9 @@ const gameEngine = () => {
             }
         } else {
             canvas.style.filter = "none";
+            codeUsed = false;
+            randomized = false;
+            mario.friction = 0.9;
         }
 
         if (canUse) {
@@ -2324,6 +2631,8 @@ const gameEngine = () => {
         if (quit) {
             cancelAnimationFrame(frameId);
             gameEnded = true;
+            codeUsed = false;
+            randomized = false;
             return;
         }
     }
@@ -2348,6 +2657,8 @@ const gameEngine = () => {
             return;
         }
     }
+
+    //console.log(gameEngine + "");
 
     update();
     intervalId = setInterval(updateTime, 400);
