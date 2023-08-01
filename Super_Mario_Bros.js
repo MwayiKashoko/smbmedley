@@ -2118,6 +2118,126 @@ const gameEngine = () => {
                     }
                 break;
 
+                case "GameGenie3":
+                    if (!randomized) {
+                        randomized = true;
+                        
+                        let memory = ["width", "height", "isBig", "hasFireFlower", "hasStar", "invincibilty", "isJumping", "isOnGround", 
+                            "falling", "isRunning", "isWalking", "isCrouching", "lives", "constantLives", 
+                            "velX", "maxCrouchingSpeed", "underwaterMultiplier", "maxSwimmingSpeed",
+                             "maxWalkingSpeed", "maxRunningSpeed", "velY", "lastVelY", "friction", "canMoveLeft", "canMoveRight", "alive", 
+                             "hitBlock", "throwingFireball", "enemyStreak", "score", "stompedOnEnemy", "coins", 
+                             "leftPressed", "rightPressed", "upPressed", "downPressed", "zPressed", "xPressed", "onSpring", "springVelocity", 
+                             "swimming", "movingX", "constantWidth", "constantHeight",
+                             "used", "coinsLeft", "timeUntilNoMoreCoins", "firstHit", "bumping", "bumpingY", "bumpTime", "isEdge", "time", 
+                             , "hasCollisions", "fold", "folding", "fallingSpeed", 
+                             "maxSpeed", "ableToMoveRight", "timeUntilCollisions", "changedDirections", "moving", 
+                             "lastGroundY", "inShell", "timeToKick", "gettingUp", "timeToGetUp", "isStanding", "timeUntilGone", "hit", "hitWall", 
+                             "timeToHit", "bufferTime", "collisions", "gone", "canMove", "canStomp", "canMoveUp", 
+                             "affectedByGravity", "isFlying", "timeToCollide", "timeToJump", "hitsToKill", "canDieByFire", 
+                             "canBounce", "hammersLeft", "throwing", "flying", "horizontal",
+                             "targetY", "condition", "risen", "hitboxX", 
+                             "hitboxY", "hitboxWidth", "hitboxHeight"];
+
+                        let bitwise = {
+                            0: function(a, b) {
+                                return a & b;
+                            },
+                            
+                            1: function(a, b) {
+                                return a | b;
+                            },
+                            
+                            2: function(a, b) {
+                                return a ^ b;
+                            },
+
+                            3: function(a) {
+                                return ~a;
+                            },
+
+                            4: function(a, b) {
+                                return a << b;
+                            },
+
+                            5: function(a, b) {
+                                return a >> b;
+                            },
+
+                            6: function(a, b) {
+                                return a >>> b;
+                            },
+                        };
+
+                        if (!codeUsed) {
+                            codeUsed = true;
+
+                            code = prompt("Enter any text that is longer than 4 letters/digits long. (The more the better)");
+
+                            if (code.length >= 4) {
+                                for (let i = 0; i < code.length; i++) {
+                                    if (code.substring(i*4, 2+i*4).length == 2) {
+                                        address.push(code.substring(i*4, 2+i*4));
+                                    }
+
+                                    if (code.substring(i*4+2, (i+1)*4).length == 2) {
+                                        replacement.push(code.substring(i*4+2, (i+1)*4));
+                                    }
+                                }
+                            }
+
+                            address.length = replacement.length;
+                            
+                            address.forEach((addy, j, arr) => {
+                                a = 0;
+                                b = 0;
+
+                                for (let i = 0; i < addy.length; i++) {
+                                    a += arr[j].charCodeAt(i);
+                                    b += replacement[j].charCodeAt(i);
+                                }
+
+                                arr[j] = a%memory.length;
+                                replacement[j] = b;
+                            });
+                        }
+
+                        address.forEach((value, j, mem) => {
+                            mario[memory[mem[j]]] = bitwise[replacement[j]%7](mario[memory[mem[j]]], replacement[j]);
+
+                            currentLocation.enemies.forEach((enemy, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            currentLocation.area.forEach(row => {
+                                row.forEach((block, i, arr) => {
+                                    arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                });
+                            });
+
+                            powerups.forEach((powerup, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            fireballs.forEach((fireball, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            flames.forEach((flame, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            debris.forEach((debris, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+
+                            fireworks.forEach((fireworks, i, arr) => {
+                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                            });
+                        });
+                    }
+                break;
+
                 case "Randomizer":
                     if (!randomized) {
                         randomized = true;
