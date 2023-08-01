@@ -43,6 +43,13 @@ Add different types of challenges using
 //ever enemy is bowser,
 //mario always has fireflower,
 //mario is always invincible,
+//no friction,
+//every block contains a poison mushroom,
+//coins are poison,
+//enemies fall from sky,
+//poison mushrooms fall from the sky,
+//Alice in wonderland (everything is twice as big, everything is twice as small depending on the slider),
+//create a game genie
 ...)
 
 Add a random/infinite level generator? and all the enemies in super mario bros
