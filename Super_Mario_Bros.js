@@ -1003,11 +1003,15 @@ const gameEngine = () => {
             timeUntilPlay = 150;
             mario.draw();
 
+            console.log(music.src);
+
             if (music.src != `${pathname}/sounds/titleScreen.wav`) {
                 music.pause();
                 music.src = `${pathname}/sounds/titleScreen.wav`;
             }
 
+            console.log(music.src);
+            
             currentLocation.area.forEach((row) => {
                 row.forEach((block, i, arr) => {
                     arr[i].update();
