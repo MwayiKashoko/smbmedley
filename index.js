@@ -78,7 +78,7 @@ let newWidth = width;
 //Determines which game is currently running (smb, smbll smb2, smb3, smw, nsmbds, nsmbwii, smm...)
 let game = null;
 //current pathname of the url
-let pathname = `file://${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}`;
+let pathname;
 //If the game has ended then the code will reset back to the game selection screen
 let gameEnded = false;
 
