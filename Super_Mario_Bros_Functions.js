@@ -1,16 +1,27 @@
 "use strict";
+//Mario which is who the player plays as
 function Player(lives, gravity, music, sounds, coins) {
+	//What x coordinate mario is drawn to the screen to
 	this.drawnX = 80;
+	//If mario is too far forwards or hits a block this is what the drawnX will be set to
 	this.alignX = this.drawnX;
+	//Y coordinate mario is drawn to
 	this.drawnY = 480;
+	//The last ground y mario is at whichi s used in the jump function
 	this.lastGroundY = this.drawnY;
 	this.width = 40;
+	this.standardWidth = 40;
+	this.standardHeight = 40;
 	this.height = 40;
+	//Does mario at least have the mushroom powerup?
 	this.isBig = false;
+	this.bigHeight = 80;
 	this.hasFireFlower = false;
 	this.hasStar = false;
+	//Used for either when mario has the star or has taken a hit
 	this.invincibility = 0;
 	this.isJumping = false;
+	this.jumpHeight = -20
 	this.isOnGround = true;
 	this.falling = false;
 	this.timeFromJump = 0;
@@ -20,6 +31,10 @@ function Player(lives, gravity, music, sounds, coins) {
 	this.directionFacing = "right";
 	this.keyLastPressed = "right";
 	this.isCrouching = false;
+	this.crouchWidth = 45;
+	this.crouchHeight = 60;
+	this.crouchingFriction = 0.5;
+	this.standardFriction = 0.05;
 	this.lives = lives;
 	this.constantLives = 3;
 	this.velX = 0;
@@ -38,14 +53,19 @@ function Player(lives, gravity, music, sounds, coins) {
 	this.hitBlock = false;
 	this.throwingFireball = false;
 	this.timeUntilCanThrowFireball = 0;
+	//The amount of enemies in a row mario has stomped on or killed with a star
 	this.enemyStreak = 0;
 	this.stompedOnEnemy = false;
 	this.score = 0;
 	this.scoreList = [100, 200, 400, 500, 800, 1000, 2000, 4000, 5000, 8000, "1UP"];
+	//Score values currently drawn to the screen
 	this.scoreValues = [];
 	this.coins = coins;
+	//The animation from coins when you hit a question block containing coins
 	this.coinAnimationList = [];
+	//Is mario allowed to enter somewhere?
 	this.canEnter = false;
+	//Used to determine what state mario is in
 	this.transition = false;
 	this.timeUntilNoTransition = 0;
 	this.goingUpPipe = false;
@@ -88,10 +108,12 @@ Player.prototype = {
 	update: function(reset, canScroll, terrain, world) {
 		this.time++;
 
+		//Determines what conditions allow this.transition to be false
 		if (this.timeUntilNoTransition <= 0 && this.alive && !this.clearedLevel && !["walkingIntoPipe", "vine", "climbing vine", "cleared castle"].includes(this.transition) && !this.goingUpPipe) {
 			this.transition = false;
 		}
 
+		//Is mario dead?
 		if (this.drawnY > height && this.transition != "climbing vine" && !this.clearedLevel) {
 			if (terrain != "Sky") {
 				if (this.alive) {
@@ -117,9 +139,9 @@ Player.prototype = {
 		}
 
 		if (this.isBig && this.alive) {
-			this.height = 80;
+			this.height = this.bigHeight;
 		} else {
-			this.height = 40;
+			this.height = this.bigHeight/2;
 		}
 
 		if (this.isOnGround) {
@@ -128,7 +150,7 @@ Player.prototype = {
 		}
 
 		if (this.transition == false && !this.goingUpPipe) {
-			if (this.drawnX > width/2-shiftWidth && canScroll ) {
+			if (this.drawnX > width/2-shiftWidth && canScroll) {
 				this.drawnX = width/2-shiftWidth;
 			}
 
@@ -144,8 +166,8 @@ Player.prototype = {
 			//Crouching code
 			if (((this.downPressed && this.isOnGround) || !this.canStand) && this.isBig) {
 				if (!this.isCrouching && this.isBig) {
-					this.drawnY += 20;
-					this.lastGroundY += 20;
+					this.drawnY += this.standardHeight/2;
+					this.lastGroundY += this.standardHeight/2;
 				}
 
 				this.isCrouching = true;
@@ -153,55 +175,48 @@ Player.prototype = {
 				if (this.isBig) {
 					this.isRunning = false;
 					this.isWalking = false;
-					this.width = 45;
-					this.height = 60;
+					this.width = this.crouchWidth;
+					this.height = this.crouchHeight;
 				}
 			} else {
 				if (this.canStand) {
 					if (this.isCrouching && !this.isOnGround) {
 						if (!this.isCrouching && this.isBig) {
-							this.drawnY += 20;
-							this.lastGroundY += 20;
+							this.drawnY += this.standardHeight/2;
+							this.lastGroundY += this.standardHeight/2;
 						}
 
 						if (this.isBig) {
 							this.isRunning = false;
 							this.isWalking = false;
-							this.width = 45;
-							this.height = 60;
+							this.width = this.crouchWidth;
+							this.height = this.crouchHeight;
 						}
 					} else {
 						this.isCrouching = false;
 
 						if (this.isBig) {
-							this.height = 80;
+							this.height = this.bigHeight;
 						} else {
-							this.height = 40;
+							this.height = this.bigHeight/2;
 						}
 
-						this.width = 40;
+						this.width = this.standardWidth;
 					}
 				}
 			}
-
-			/*if (!this.isBig || !this.hasFireFlower) {
-				this.isBig = true;
-				this.hasFireFlower = true;
-				this.drawnY -= 40;
-				this.lastGroundY -= 40;
-			}*/
 
 			if (this.leftPressed) {
 				this.keyLastPressed = "left";
 
 				if (this.canMoveLeft && this.isCrouching && this.isBig && this.isJumping && Math.abs(this.velX) < this.maxCrouchingSpeed) {
-					this.velX -= .5;
+					this.velX -= this.crouchingFriction;
 				}
 			} else if (this.rightPressed) {
 				this.keyLastPressed = "right";
 
 				if (this.canMoveRight && this.isCrouching && this.isBig && this.isJumping && Math.abs(this.velX) < this.maxCrouchingSpeed) {
-					this.velX += .5;
+					this.velX += this.crouchingFriction;
 				}
 			}
 
@@ -211,24 +226,24 @@ Player.prototype = {
 				if (terrain == "Underwater" && this.isWalking) { 
 					if (Math.abs(this.velX) < this.maxSwimmingSpeed*this.underwaterMultiplier) {
 						if (this.leftPressed && this.canMoveLeft) {
-							this.velX -= 0.05;
+							this.velX -= this.standardFriction;
 						} else if (this.rightPressed && this.canMoveRight) {
-							this.velX += 0.05;
+							this.velX += this.standardFriction;
 						}
 					} else {
 						this.velX = Math.sign(this.velX) * this.maxSwimmingSpeed*this.underwaterMultiplier;
 					}
 				} else if (this.isWalking && Math.abs(this.velX) < this.maxWalkingSpeed && terrain != "Underwater") {
 					if (this.leftPressed && this.canMoveLeft) {
-						this.velX -= 0.05;
+						this.velX -= this.standardFriction;
 					} else if (this.rightPressed && this.canMoveRight) {
-						this.velX += 0.05;
+						this.velX += this.standardFriction;
 					}
 				} else if (this.isRunning && Math.abs(this.velX) < this.maxRunningSpeed && terrain != "Underwater") {
 					if (this.leftPressed && this.canMoveLeft) {
-						this.velX -= 0.1;
+						this.velX -= this.standardFriction*2;
 					} else if (this.rightPressed && this.canMoveRight) {
-						this.velX += 0.1;
+						this.velX += this.standardFriction*2;
 					}
 				}
 			}
@@ -249,10 +264,6 @@ Player.prototype = {
 				this.directionFacing = "left";
 			}
 
-			/*if (this.velY > 0 && terrain != "Underwater") {
-				this.upPressed = false;
-			}*/
-
 			if (this.drawnX > 1 || this.velX > 0) {
 				this.drawnX += this.velX;
 
@@ -267,14 +278,14 @@ Player.prototype = {
 			}
 
 			if (this.isChangingDirections != "none") {
-				this.velX *= this.friction+0.05;
+				this.velX *= this.friction+this.standardFriction;
 			} else if (this.isCrouching && this.isBig) {
-				this.velX *= this.friction+0.06;
+				this.velX *= this.friction+this.standardFriction*(6/5);
 			} else if (this.velX != 0 && !this.isRunning && !this.isWalking) {
 				this.velX *= this.friction;
 			}
 
-			if (Math.abs(this.velX) < .05 || (Math.abs(this.velX) <= .1152) && this.isCrouching) {
+			if (Math.abs(this.velX) < this.stanardFriction || (Math.abs(this.velX) <= this.standardFriction*3) && this.isCrouching) {
 				this.velX = 0;
 			}
 
@@ -288,7 +299,7 @@ Player.prototype = {
 
 			if (this.isJumping && !this.onSpring) {
 				if (terrain != "Underwater") {
-					this.jump(-20);
+					this.jump(this.jumpHeight);
 				} else if (this.drawnY > 70) {
 					this.swimming = true;
 					this.swim();
@@ -431,21 +442,21 @@ Player.prototype = {
 			//this.velX = 0;
 
 			if (this.transition == "shrinking" && this.timeUntilNoTransition == 50) {
-				this.drawnY -= 40;
+				this.drawnY -= this.stanardHeight/2;
 			}
 
 			if (this.timeUntilNoTransition <= 0) {
 				this.velX = storedVelX;
 
 				if (this.transition == "shrinking") {
-					this.drawnY += 40;
+					this.drawnY += this.standardHeight/2;
 				}
 			}
 
 			this.timeUntilNoTransition--;
 		} else if (this.transition == "dying") {
 			this.velX = 0;
-			this.jump(-19);
+			this.jump(this.jumpHeight+1);
 		} else if (this.transition == "down pipe") {
 			this.velX = 0;
 			this.drawnY++;
@@ -654,9 +665,6 @@ Player.prototype = {
 			this.hitboxWidth = 22;
 			this.hitboxHeight = 30;
 		}
-
-		/*graphics.strokeStyle = "black";
-		graphics.strokeRect(Math.round(this.hitboxX), Math.round(this.hitboxY), this.hitboxWidth, this.hitboxHeight);*/
 	},
 
 	decideImage: function() {
