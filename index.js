@@ -1,21 +1,16 @@
-//blocks are 16 pixels by 16 pixels (1-1: 224 by 15 blocks, Underground section 16 by 16 blocks)
-//Overworld ground layout 69 blocks then 2 block gap then 15 blocks then 3 block gap then 64 blocks then 2 block gap then 69 blocks
-
 /*
-Things to do (in order)
+Things to do
 
 make code better/cleaner and optimize graphics, add code for lost levels/smb3/smw/make your own mario levels
-remove grid?
-
 
 /all powerups
 /fix hitboxes
-/all enemies (increase score when killed..., Blue Piranha plants, Green Piranha plants, Red Koopas, Red Parakoopa, Bowser, Bloopers, Hammer Bros, Bowser with hammers and flames)
-/all blocks (side collisions when running full speed at pit)
+/all enemies (/increase score when killed...,) Maybe do something with palettes?
+/all blocks (/side collisions when running full speed at pit)
 /reset function
 /underground section
 /pause
-/all mario mechanics stuff (still some minor things that I will fix at the end)
+/all mario mechanics stuff
 /mario jump mechanics
 /flagpole, /castle, /ending the level, and /transitioning to the next level
 /animations, /score, /timer, /world, /music
@@ -53,8 +48,7 @@ Add different types of challenges using
 ...)
 
 Add a random/infinite level generator? and all the enemies in super mario bros
-Add save files and allow loading?
-Make an AI that completes levels?
+Make an AI that completes levels (Maybe later when I learn neural networks)?
 */
 
 "use strict";
@@ -68,30 +62,34 @@ const volume = document.getElementById("volume");
 const width = canvas.width;
 const height = canvas.height;
 
+//The challenge dropdown and slider for if the user decides to use them
 const challengeSelect = document.getElementById("challengeSelect");
 const challengeSlider = document.getElementById("challengeSlider");
 const canUseChallengeSlider = document.getElementById("canUseChallengeSlider");
 
+//Music that plays when paused that is supposed to be secret
 const pauseMusic = [new Audio("mainSounds/FileSelect.mp3"), new Audio("mainSounds/PiranhaLullaby.mp3"), new Audio("mainSounds/YoshiFindsMario.mp3"), new Audio("mainSounds/MusicBox.mp3"), new Audio("mainSounds/EndingMusic.mp3")];
 
 //The shift to match each game to it's original aspect ratio
 let shiftWidth = 0;
+//newWidth as a result of shiftWidth
 let newWidth = width;
 
-//Determines which game is currently running (smb, smbll smb2, smb3, smw, nsmbds, nsmbwii, smm)
+//Determines which game is currently running (smb, smbll smb2, smb3, smw, nsmbds, nsmbwii, smm...)
 let game = null;
-let pathname = null;
+//current pathname of the url
+let pathname = `file://${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}`;
+//If the game has ended then the code will reset back to the game selection screen
 let gameEnded = false;
 
 window.onload = function() {
-    //current pathname
-    const pathname = `file://${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}`;
     //function declarations
     let startup;
     let titleScreen;
     let gameSelectTransition;
     let gameSelectScreen;
 
+    //The button you clcik to press play
     const playButton = document.getElementById("playButton");
     //Current state of the program (What game is it on or is it on the title screen etc.)
     let state = "none";
@@ -202,7 +200,7 @@ window.onload = function() {
     gameSelectTransition = () => {
         graphics.clearRect(0, 0, width, height);
 
-        graphics.fillStyle = "blue";
+        graphics.fillStyle = "rgb(245, 161, 66)";
 
         if (!transitionToGameSelect1.hasPlayed) {
             transitionToGameSelect1.play();
@@ -251,14 +249,12 @@ window.onload = function() {
     let coverImages = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
     coverImages[0].src = "mainImages/superMarioBrosCover.png";
     coverImages[1].src = "mainImages/superMarioBrosTheLostLevelsCover.png";
-    //coverImages[2].src = "mainImages/superMarioBros2Cover.jpeg";
     //Determines which game is selected on the game select screen
     let gameSelected = 0;
-    let gamesText = ["Super Mario Bros.", "Super Mario Bros.: The Lost Levels"];//, "Super Mario Bros. 2"];
+    let gamesText = ["Super Mario Bros.", "Super Mario Bros.: The Lost Levels"];
     let gamesObject = {
         0: "smb",
         1: "smbtll",
-        //2: "smb2"
     }
 
     gameSelectScreen = () => {
@@ -347,13 +343,10 @@ window.onload = function() {
 
     playButton.onclick = () => {
         if (state == "none") {
-            /*state = "startup";
+            state = "startup";
             startup();
             startupSound.volume = volume.value/100;
-            startupSound.play();*/
-
-            state = "game select";
-            gameSelectScreen();
+            startupSound.play();
         }
     }
 
@@ -372,9 +365,5 @@ window.onload = function() {
                 gameSelected += position;
             }
         }
-    });
-
-    document.addEventListener("visibilitychange", (e) => {
-        //console.log(document.getElementsByTagName("audio"));
     });
 };
