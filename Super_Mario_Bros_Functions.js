@@ -293,7 +293,7 @@ Player.prototype = {
 
 			this.swimming = false;
 
-			if (terrain == "Underwater" && this.drawnY <= 70 && !this.isBig) {
+			if (terrain == "Underwater" && this.drawnY <= 70) {
 				this.drawnY += 2;
 			}
 
