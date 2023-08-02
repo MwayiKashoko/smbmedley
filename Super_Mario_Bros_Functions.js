@@ -220,7 +220,7 @@ Player.prototype = {
 				}
 			}
 
-			this.underwaterMultiplier = this.isOnGround ? 0.5 : 1;
+			this.underwaterMultiplier = this.isOnGround ? 0.8 : 1;
 
 			if (!this.isCrouching || !this.isBig) {
 				if (terrain == "Underwater" && this.isWalking) { 
