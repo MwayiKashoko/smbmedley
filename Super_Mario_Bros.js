@@ -45,6 +45,7 @@ const gameEngine = () => {
     let randomized = false;
     let codeUsed = false;
 
+    let memory
     let code;
     let address = [];
     let replacement = [];
@@ -1003,15 +1004,11 @@ const gameEngine = () => {
             timeUntilPlay = 150;
             mario.draw();
 
-            console.log(music.src);
-
             if (music.src != `${pathname}/sounds/titleScreen.wav`) {
                 music.pause();
                 music.src = `${pathname}/sounds/titleScreen.wav`;
             }
 
-            console.log(music.src);
-            
             currentLocation.area.forEach((row) => {
                 row.forEach((block, i, arr) => {
                     arr[i].update();
@@ -1918,23 +1915,6 @@ const gameEngine = () => {
             switch (option) {
                 case "GameGenie1":
                     if (true) {
-                        let memory = ["width", "height", "isBig", "hasFireFlower", "hasStar", "invincibilty", "isJumping", "isOnGround", 
-                            "falling", "isRunning", "isWalking", "isCrouching", "lives", "constantLives", 
-                            "velX", "maxCrouchingSpeed", "underwaterMultiplier", "maxSwimmingSpeed",
-                             "maxWalkingSpeed", "maxRunningSpeed", "velY", "lastVelY", "friction", "canMoveLeft", "canMoveRight", "alive", 
-                             "hitBlock", "throwingFireball", "enemyStreak", "score", "stompedOnEnemy", "coins", 
-                             "leftPressed", "rightPressed", "upPressed", "downPressed", "zPressed", "xPressed", "onSpring", "springVelocity", 
-                             "swimming", "movingX", "constantWidth", "constantHeight",
-                             "used", "coinsLeft", "timeUntilNoMoreCoins", "firstHit", "bumping", "bumpingY", "bumpTime", "isEdge", "time", 
-                             , "hasCollisions", "fold", "folding", "fallingSpeed", 
-                             "maxSpeed", "ableToMoveRight", "timeUntilCollisions", "changedDirections", "moving", 
-                             "lastGroundY", "inShell", "timeToKick", "gettingUp", "timeToGetUp", "isStanding", "timeUntilGone", "hit", "hitWall", 
-                             "timeToHit", "bufferTime", "collisions", "gone", "canMove", "canStomp", "canMoveUp", 
-                             "affectedByGravity", "isFlying", "timeToCollide", "timeToJump", "hitsToKill", "canDieByFire", 
-                             "canBounce", "hammersLeft", "throwing", "flying", "horizontal",
-                             "targetY", "condition", "risen", "hitboxX", 
-                             "hitboxY", "hitboxWidth", "hitboxHeight"];
-
                         if (!codeUsed) {
                             codeUsed = true;
 
@@ -1963,66 +1943,143 @@ const gameEngine = () => {
                                     b += replacement[j].charCodeAt(i);
                                 }
 
-                                arr[j] = a%memory.length;
+                                arr[j] = a;
                                 replacement[j] = b;
                             });
                         }
 
                         address.forEach((value, j, mem) => {
-                            mario[memory[mem[j]]] = b;
+                            if (mem[j] % 8 == 0) {
+                                memory = Object.keys(mario);
 
-                            currentLocation.enemies.forEach((enemy, i, arr) => {
-                                arr[i][memory[mem[j]]] = replacement[j];
-                            });
+                                let num = mem[j]%memory.length;
 
-                            currentLocation.area.forEach(row => {
-                                row.forEach((block, i, arr) => {
-                                    arr[i][memory[mem[j]]] = replacement[j];
+                                if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                    mario[memory[num]] = replacement[j];
+                                }
+                            } else if (mem[j] % 8 == 1) {
+                                currentLocation.enemies.forEach((enemy, i, arr) => {
+                                    memory = Object.keys(enemy);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = replacement[j];
+                                    }
+
+                                    if (mem[j] % 3 == 0) {
+                                        arr[i].spinies.forEach((spiny, k, spinies) => {
+                                            memory = Object.keys(spiny);
+
+                                            let num = mem[j]%memory.length;
+
+                                            if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                                spinies[k][memory[num]] = replacement[j];
+                                            }
+                                        });
+                                    } else if (mem[j] % 3 == 1) {
+                                        arr[i].hammers.forEach((hammer, k, hammers) => {
+                                            memory = Object.keys(hammer);
+
+                                            let num = mem[j]%memory.length;
+
+                                            if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                                hammers[k][memory[num]] = replacement[j];
+                                            }
+                                        });
+                                    }
                                 });
-                            });
+                            } else if (mem[j] % 8 == 2) {
+                                currentLocation.area.forEach(row => {
+                                    row.forEach((block, i, arr) => {
+                                        memory = Object.keys(block);
 
-                            powerups.forEach((powerup, i, arr) => {
-                                arr[i][memory[mem[j]]] = replacement[j];
-                            });
+                                        let num = mem[j]%memory.length;
 
-                            fireballs.forEach((fireball, i, arr) => {
-                                arr[i][memory[mem[j]]] = replacement[j];
-                            });
+                                        if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                            arr[i][memory[num]] = replacement[j];
+                                        }
 
-                            flames.forEach((flame, i, arr) => {
-                                arr[i][memory[mem[j]]] = replacement[j];
-                            });
+                                        if (mem[j] % 3 == 0) {
+                                            arr[i].fireBar.forEach((fireball, k, fireballs) => {
+                                                memory = Object.keys(fireball);
 
-                            debris.forEach((debris, i, arr) => {
-                                arr[i][memory[mem[j]]] = replacement[j];
-                            });
+                                                let num = mem[j]%memory.length;
 
-                            fireworks.forEach((fireworks, i, arr) => {
-                                arr[i][memory[mem[j]]] = replacement[j];
-                            });
+                                                if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                                    fireballs[k][memory[num]] = replacement[j];
+                                                }
+                                            });
+                                        } else if (mem[j] % 3 == 1) {
+                                            arr[i].bullets.forEach((bullet, k, bullets) => {
+                                                memory = Object.keys(bullet);
+
+                                                let num = mem[j]%memory.length;
+
+                                                if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                                    bullets[k][memory[num]] = replacement[j];
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            } else if (mem[j] % 8 == 3) {
+                                powerups.forEach((powerup, i, arr) => {
+                                    memory = Object.keys(powerup);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = replacement[j];
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 4) {
+                                fireballs.forEach((fireball, i, arr) => {
+                                    memory = Object.keys(fireball);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = replacement[j];
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 5) {
+                                flames.forEach((flame, i, arr) => {
+                                    memory = Object.keys(flame);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = replacement[j];
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 6) {
+                                debris.forEach((debris, i, arr) => {
+                                    memory = Object.keys(debris);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = replacement[j];
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 7) {
+                                fireworks.forEach((fireworks, i, arr) => {
+                                    memory = Object.keys(fireworks);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = replacement[j];
+                                    }
+                                });
+                            }
                         });
                     }
                 break;
 
                 case "GameGenie2":
                     if (true) {
-                        let memory = ["width", "height", "isBig", "hasFireFlower", "hasStar", "invincibilty", "isJumping", "isOnGround", 
-                            "falling", "isRunning", "isWalking", "isCrouching", "lives", "constantLives", 
-                            "velX", "maxCrouchingSpeed", "underwaterMultiplier", "maxSwimmingSpeed",
-                             "maxWalkingSpeed", "maxRunningSpeed", "velY", "lastVelY", "friction", "canMoveLeft", "canMoveRight", "alive", 
-                             "hitBlock", "throwingFireball", "enemyStreak", "score", "stompedOnEnemy", "coins", 
-                             "leftPressed", "rightPressed", "upPressed", "downPressed", "zPressed", "xPressed", "onSpring", "springVelocity", 
-                             "swimming", "movingX", "constantWidth", "constantHeight",
-                             "used", "coinsLeft", "timeUntilNoMoreCoins", "firstHit", "bumping", "bumpingY", "bumpTime", "isEdge", "time", 
-                             , "hasCollisions", "fold", "folding", "fallingSpeed", 
-                             "maxSpeed", "ableToMoveRight", "timeUntilCollisions", "changedDirections", "moving", 
-                             "lastGroundY", "inShell", "timeToKick", "gettingUp", "timeToGetUp", "isStanding", "timeUntilGone", "hit", "hitWall", 
-                             "timeToHit", "bufferTime", "collisions", "gone", "canMove", "canStomp", "canMoveUp", 
-                             "affectedByGravity", "isFlying", "timeToCollide", "timeToJump", "hitsToKill", "canDieByFire", 
-                             "canBounce", "hammersLeft", "throwing", "flying", "horizontal",
-                             "targetY", "condition", "risen", "hitboxX", 
-                             "hitboxY", "hitboxWidth", "hitboxHeight"];
-
                         let bitwise = {
                             0: function(a, b) {
                                 return a & b;
@@ -2081,43 +2138,137 @@ const gameEngine = () => {
                                     b += replacement[j].charCodeAt(i);
                                 }
 
-                                arr[j] = a%memory.length;
+                                arr[j] = a;
                                 replacement[j] = b;
                             });
                         }
 
                         address.forEach((value, j, mem) => {
-                            mario[memory[mem[j]]] = bitwise[replacement[j]%7](mario[memory[mem[j]]], replacement[j]);
+                            if (mem[j] % 8 == 0) {
+                                memory = Object.keys(mario);
 
-                            currentLocation.enemies.forEach((enemy, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
-                            });
+                                let num = mem[j]%memory.length;
 
-                            currentLocation.area.forEach(row => {
-                                row.forEach((block, i, arr) => {
-                                    arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                    mario[memory[num]] = bitwise[replacement[j]%7](mario[memory[num]], replacement[j]);
+                                }
+                            } else if (mem[j] % 8 == 1) {
+                                currentLocation.enemies.forEach((enemy, i, arr) => {
+                                    memory = Object.keys(enemy);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+
+                                    if (mem[j] % 3 == 0) {
+                                        arr[i].spinies.forEach((spiny, k, spinies) => {
+                                            memory = Object.keys(spiny);
+
+                                            let num = mem[j]%memory.length;
+
+                                            if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                                spinies[k][memory[num]] = bitwise[replacement[j]%7](spinies[k][memory[num]], replacement[j]);
+                                            }
+                                        });
+                                    } else if (mem[j] % 3 == 1) {
+                                        arr[i].hammers.forEach((hammer, k, hammers) => {
+                                            memory = Object.keys(hammer);
+
+                                            let num = mem[j]%memory.length;
+
+                                            if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                                hammers[k][memory[num]] = bitwise[replacement[j]%7](hammers[k][memory[num]], replacement[j]);
+                                            }
+                                        });
+                                    }
                                 });
-                            });
+                            } else if (mem[j] % 8 == 2) {
+                                currentLocation.area.forEach(row => {
+                                    row.forEach((block, i, arr) => {
+                                        memory = Object.keys(block);
 
-                            powerups.forEach((powerup, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
-                            });
+                                        let num = mem[j]%memory.length;
 
-                            fireballs.forEach((fireball, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
-                            });
+                                        if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                            arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                        }
 
-                            flames.forEach((flame, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
-                            });
+                                        if (mem[j] % 3 == 0) {
+                                            arr[i].fireBar.forEach((fireball, k, fireballs) => {
+                                                memory = Object.keys(fireball);
 
-                            debris.forEach((debris, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
-                            });
+                                                let num = mem[j]%memory.length;
 
-                            fireworks.forEach((fireworks, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
-                            });
+                                                if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                                    fireballs[k][memory[num]] = bitwise[replacement[j]%7](fireballs[k][memory[num]], replacement[j]);
+                                                }
+                                            });
+                                        } else if (mem[j] % 3 == 1) {
+                                            arr[i].bullets.forEach((bullet, k, bullets) => {
+                                                memory = Object.keys(bullet);
+
+                                                let num = mem[j]%memory.length;
+
+                                                if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                                    bullets[k][memory[num]] = bitwise[replacement[j]%7](bullets[k][memory[num]], replacement[j]);
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            } else if (mem[j] % 8 == 3) {
+                                powerups.forEach((powerup, i, arr) => {
+                                    memory = Object.keys(powerup);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 4) {
+                                fireballs.forEach((fireball, i, arr) => {
+                                    memory = Object.keys(fireball);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 5) {
+                                flames.forEach((flame, i, arr) => {
+                                    memory = Object.keys(flame);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 6) {
+                                debris.forEach((debris, i, arr) => {
+                                    memory = Object.keys(debris);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 7) {
+                                fireworks.forEach((fireworks, i, arr) => {
+                                    memory = Object.keys(fireworks);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            }
                         });
                     }
                 break;
@@ -2125,23 +2276,6 @@ const gameEngine = () => {
                 case "GameGenie3":
                     if (!randomized) {
                         randomized = true;
-                        
-                        let memory = ["width", "height", "isBig", "hasFireFlower", "hasStar", "invincibilty", "isJumping", "isOnGround", 
-                            "falling", "isRunning", "isWalking", "isCrouching", "lives", "constantLives", 
-                            "velX", "maxCrouchingSpeed", "underwaterMultiplier", "maxSwimmingSpeed",
-                             "maxWalkingSpeed", "maxRunningSpeed", "velY", "lastVelY", "friction", "canMoveLeft", "canMoveRight", "alive", 
-                             "hitBlock", "throwingFireball", "enemyStreak", "score", "stompedOnEnemy", "coins", 
-                             "leftPressed", "rightPressed", "upPressed", "downPressed", "zPressed", "xPressed", "onSpring", "springVelocity", 
-                             "swimming", "movingX", "constantWidth", "constantHeight",
-                             "used", "coinsLeft", "timeUntilNoMoreCoins", "firstHit", "bumping", "bumpingY", "bumpTime", "isEdge", "time", 
-                             , "hasCollisions", "fold", "folding", "fallingSpeed", 
-                             "maxSpeed", "ableToMoveRight", "timeUntilCollisions", "changedDirections", "moving", 
-                             "lastGroundY", "inShell", "timeToKick", "gettingUp", "timeToGetUp", "isStanding", "timeUntilGone", "hit", "hitWall", 
-                             "timeToHit", "bufferTime", "collisions", "gone", "canMove", "canStomp", "canMoveUp", 
-                             "affectedByGravity", "isFlying", "timeToCollide", "timeToJump", "hitsToKill", "canDieByFire", 
-                             "canBounce", "hammersLeft", "throwing", "flying", "horizontal",
-                             "targetY", "condition", "risen", "hitboxX", 
-                             "hitboxY", "hitboxWidth", "hitboxHeight"];
 
                         let bitwise = {
                             0: function(a, b) {
@@ -2201,43 +2335,681 @@ const gameEngine = () => {
                                     b += replacement[j].charCodeAt(i);
                                 }
 
-                                arr[j] = a%memory.length;
+                                arr[j] = a
                                 replacement[j] = b;
                             });
                         }
 
                         address.forEach((value, j, mem) => {
-                            mario[memory[mem[j]]] = bitwise[replacement[j]%7](mario[memory[mem[j]]], replacement[j]);
+                            if (mem[j] % 8 == 0) {
+                                memory = Object.keys(mario);
+
+                                let num = mem[j]%memory.length;
+
+                                if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                    mario[memory[num]] = bitwise[replacement[j]%7](mario[memory[num]], replacement[j]);
+                                }
+                            } else if (mem[j] % 8 == 1) {
+                                currentLocation.enemies.forEach((enemy, i, arr) => {
+                                    memory = Object.keys(enemy);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+
+                                    if (mem[j] % 3 == 0) {
+                                        arr[i].spinies.forEach((spiny, k, spinies) => {
+                                            memory = Object.keys(spiny);
+
+                                            let num = mem[j]%memory.length;
+
+                                            if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                                spinies[k][memory[num]] = bitwise[replacement[j]%7](spinies[k][memory[num]], replacement[j]);
+                                            }
+                                        });
+                                    } else if (mem[j] % 3 == 1) {
+                                        arr[i].hammers.forEach((hammer, k, hammers) => {
+                                            memory = Object.keys(hammer);
+
+                                            let num = mem[j]%memory.length;
+
+                                            if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                                hammers[k][memory[num]] = bitwise[replacement[j]%7](hammers[k][memory[num]], replacement[j]);
+                                            }
+                                        });
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 2) {
+                                currentLocation.area.forEach(row => {
+                                    row.forEach((block, i, arr) => {
+                                        memory = Object.keys(block);
+
+                                        let num = mem[j]%memory.length;
+
+                                        if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                            arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                        }
+
+                                        if (mem[j] % 3 == 0) {
+                                            arr[i].fireBar.forEach((fireball, k, fireballs) => {
+                                                memory = Object.keys(fireball);
+
+                                                let num = mem[j]%memory.length;
+
+                                                if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                                    fireballs[k][memory[num]] = bitwise[replacement[j]%7](fireballs[k][memory[num]], replacement[j]);
+                                                }
+                                            });
+                                        } else if (mem[j] % 3 == 1) {
+                                            arr[i].bullets.forEach((bullet, k, bullets) => {
+                                                memory = Object.keys(bullet);
+
+                                                let num = mem[j]%memory.length;
+
+                                                if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                                    bullets[k][memory[num]] = bitwise[replacement[j]%7](bullets[k][memory[num]], replacement[j]);
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            } else if (mem[j] % 8 == 3) {
+                                powerups.forEach((powerup, i, arr) => {
+                                    memory = Object.keys(powerup);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 4) {
+                                fireballs.forEach((fireball, i, arr) => {
+                                    memory = Object.keys(fireball);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 5) {
+                                flames.forEach((flame, i, arr) => {
+                                    memory = Object.keys(flame);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 6) {
+                                debris.forEach((debris, i, arr) => {
+                                    memory = Object.keys(debris);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            } else if (mem[j] % 8 == 7) {
+                                fireworks.forEach((fireworks, i, arr) => {
+                                    memory = Object.keys(fireworks);
+
+                                    let num = mem[j]%memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                break;
+
+                case "GameGenie4":
+                    if (true) {
+                        if (!codeUsed) {
+                            codeUsed = true;
+
+                            code = prompt("Enter any text that is longer than 4 letters/digits long. (The more the better))");
+
+                            if (code.length >= 4) {
+                                for (let i = 0; i < code.length; i++) {
+                                    if (code.substring(i * 4, 2 + i * 4).length == 2) {
+                                        address.push(code.substring(i * 4, 2 + i * 4));
+                                    }
+
+                                    if (code.substring(i * 4 + 2, (i + 1) * 4).length == 2) {
+                                        replacement.push(code.substring(i * 4 + 2, (i + 1) * 4));
+                                    }
+                                }
+                            }
+
+                            address.length = replacement.length;
+
+                            address.forEach((addy, j, arr) => {
+                                a = 0;
+                                b = 0;
+
+                                for (let i = 0; i < addy.length; i++) {
+                                    a += arr[j].charCodeAt(i);
+                                    b += replacement[j].charCodeAt(i);
+                                }
+
+                                arr[j] = a;
+                                replacement[j] = b;
+                            });
+                        }
+
+                        address.forEach((value, j, mem) => {
+                            memory = Object.keys(mario);
+
+                            let num = mem[j] % memory.length;
+
+                            if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                mario[memory[num]] = replacement[j];
+                            }
 
                             currentLocation.enemies.forEach((enemy, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                memory = Object.keys(enemy);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = replacement[j];
+                                }
+
+
+                                arr[i].spinies.forEach((spiny, k, spinies) => {
+                                    memory = Object.keys(spiny);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                        spinies[k][memory[num]] = replacement[j];
+                                    }
+                                });
+
+                                arr[i].hammers.forEach((hammer, k, hammers) => {
+                                    memory = Object.keys(hammer);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                        hammers[k][memory[num]] = replacement[j];
+                                    }
+                                });
+
                             });
 
                             currentLocation.area.forEach(row => {
                                 row.forEach((block, i, arr) => {
-                                    arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                    memory = Object.keys(block);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = replacement[j];
+                                    }
+
+
+                                    arr[i].fireBar.forEach((fireball, k, fireballs) => {
+                                        memory = Object.keys(fireball);
+
+                                        let num = mem[j] % memory.length;
+
+                                        if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                            fireballs[k][memory[num]] = replacement[j];
+                                        }
+                                    });
+
+                                    arr[i].bullets.forEach((bullet, k, bullets) => {
+                                        memory = Object.keys(bullet);
+
+                                        let num = mem[j] % memory.length;
+
+                                        if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                            bullets[k][memory[num]] = replacement[j];
+                                        }
+                                    });
+
                                 });
                             });
 
                             powerups.forEach((powerup, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                memory = Object.keys(powerup);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = replacement[j];
+                                }
                             });
 
                             fireballs.forEach((fireball, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                memory = Object.keys(fireball);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = replacement[j];
+                                }
                             });
 
                             flames.forEach((flame, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                memory = Object.keys(flame);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = replacement[j];
+                                }
                             });
 
                             debris.forEach((debris, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                memory = Object.keys(debris);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = replacement[j];
+                                }
                             });
 
                             fireworks.forEach((fireworks, i, arr) => {
-                                arr[i][memory[mem[j]]] = bitwise[replacement[j]%7](arr[i][memory[mem[j]]], replacement[j]);
+                                memory = Object.keys(fireworks);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = replacement[j];
+                                }
                             });
+                        });
+                    }
+                break;
+
+                case "GameGenie5":
+                    if (true) {
+                        let bitwise = {
+                            0: function(a, b) {
+                                return a & b;
+                            },
+
+                            1: function(a, b) {
+                                return a | b;
+                            },
+
+                            2: function(a, b) {
+                                return a ^ b;
+                            },
+
+                            3: function(a) {
+                                return ~a;
+                            },
+
+                            4: function(a, b) {
+                                return a << b;
+                            },
+
+                            5: function(a, b) {
+                                return a >> b;
+                            },
+
+                            6: function(a, b) {
+                                return a >>> b;
+                            },
+                        };
+
+                        if (!codeUsed) {
+                            codeUsed = true;
+
+                            code = prompt("Enter any text that is longer than 4 letters/digits long. (The more the better)");
+
+                            if (code.length >= 4) {
+                                for (let i = 0; i < code.length; i++) {
+                                    if (code.substring(i * 4, 2 + i * 4).length == 2) {
+                                        address.push(code.substring(i * 4, 2 + i * 4));
+                                    }
+
+                                    if (code.substring(i * 4 + 2, (i + 1) * 4).length == 2) {
+                                        replacement.push(code.substring(i * 4 + 2, (i + 1) * 4));
+                                    }
+                                }
+                            }
+
+                            address.length = replacement.length;
+
+                            address.forEach((addy, j, arr) => {
+                                a = 0;
+                                b = 0;
+
+                                for (let i = 0; i < addy.length; i++) {
+                                    a += arr[j].charCodeAt(i);
+                                    b += replacement[j].charCodeAt(i);
+                                }
+
+                                arr[j] = a;
+                                replacement[j] = b;
+                            });
+                        }
+
+                        address.forEach((value, j, mem) => {
+                            memory = Object.keys(mario);
+
+                            let num = mem[j] % memory.length;
+
+                            if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                mario[memory[num]] = bitwise[replacement[j] % 7](mario[memory[num]], replacement[j]);
+                            }
+                            currentLocation.enemies.forEach((enemy, i, arr) => {
+                                memory = Object.keys(enemy);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+
+                                arr[i].spinies.forEach((spiny, k, spinies) => {
+                                    memory = Object.keys(spiny);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                        spinies[k][memory[num]] = bitwise[replacement[j] % 7](spinies[k][memory[num]], replacement[j]);
+                                    }
+                                });
+                                arr[i].hammers.forEach((hammer, k, hammers) => {
+                                    memory = Object.keys(hammer);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                        hammers[k][memory[num]] = bitwise[replacement[j] % 7](hammers[k][memory[num]], replacement[j]);
+                                    }
+                                });
+                            });
+                            currentLocation.area.forEach(row => {
+                                row.forEach((block, i, arr) => {
+                                    memory = Object.keys(block);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                    }
+
+                                    arr[i].fireBar.forEach((fireball, k, fireballs) => {
+                                        memory = Object.keys(fireball);
+
+                                        let num = mem[j] % memory.length;
+
+                                        if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                            fireballs[k][memory[num]] = bitwise[replacement[j] % 7](fireballs[k][memory[num]], replacement[j]);
+                                        }
+                                    });
+                                    arr[i].bullets.forEach((bullet, k, bullets) => {
+                                        memory = Object.keys(bullet);
+
+                                        let num = mem[j] % memory.length;
+
+                                        if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                            bullets[k][memory[num]] = bitwise[replacement[j] % 7](bullets[k][memory[num]], replacement[j]);
+                                        }
+                                    });
+                                });
+                            });
+                            powerups.forEach((powerup, i, arr) => {
+                                memory = Object.keys(powerup);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
+                            fireballs.forEach((fireball, i, arr) => {
+                                memory = Object.keys(fireball);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
+                            flames.forEach((flame, i, arr) => {
+                                memory = Object.keys(flame);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
+                            debris.forEach((debris, i, arr) => {
+                                memory = Object.keys(debris);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
+                            fireworks.forEach((fireworks, i, arr) => {
+                                memory = Object.keys(fireworks);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+                        });
+                    }
+                break;
+
+                case "GameGenie6":
+                    if (!randomized) {
+                        randomized = true;
+
+                        let bitwise = {
+                            0: function(a, b) {
+                                return a & b;
+                            },
+
+                            1: function(a, b) {
+                                return a | b;
+                            },
+
+                            2: function(a, b) {
+                                return a ^ b;
+                            },
+
+                            3: function(a) {
+                                return ~a;
+                            },
+
+                            4: function(a, b) {
+                                return a << b;
+                            },
+
+                            5: function(a, b) {
+                                return a >> b;
+                            },
+
+                            6: function(a, b) {
+                                return a >>> b;
+                            },
+                        };
+
+                        if (!codeUsed) {
+                            codeUsed = true;
+
+                            code = prompt("Enter any text that is longer than 4 letters/digits long. (The more the better)");
+
+                            if (code.length >= 4) {
+                                for (let i = 0; i < code.length; i++) {
+                                    if (code.substring(i * 4, 2 + i * 4).length == 2) {
+                                        address.push(code.substring(i * 4, 2 + i * 4));
+                                    }
+
+                                    if (code.substring(i * 4 + 2, (i + 1) * 4).length == 2) {
+                                        replacement.push(code.substring(i * 4 + 2, (i + 1) * 4));
+                                    }
+                                }
+                            }
+
+                            address.length = replacement.length;
+
+                            address.forEach((addy, j, arr) => {
+                                a = 0;
+                                b = 0;
+
+                                for (let i = 0; i < addy.length; i++) {
+                                    a += arr[j].charCodeAt(i);
+                                    b += replacement[j].charCodeAt(i);
+                                }
+
+                                arr[j] = a
+                                replacement[j] = b;
+                            });
+                        }
+
+                        address.forEach((value, j, mem) => {
+
+                            memory = Object.keys(mario);
+
+                            let num = mem[j] % memory.length;
+
+                            if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                mario[memory[num]] = bitwise[replacement[j] % 7](mario[memory[num]], replacement[j]);
+                            }
+
+                            currentLocation.enemies.forEach((enemy, i, arr) => {
+                                memory = Object.keys(enemy);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+
+
+                                arr[i].spinies.forEach((spiny, k, spinies) => {
+                                    memory = Object.keys(spiny);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                        spinies[k][memory[num]] = bitwise[replacement[j] % 7](spinies[k][memory[num]], replacement[j]);
+                                    }
+                                });
+
+                                arr[i].hammers.forEach((hammer, k, hammers) => {
+                                    memory = Object.keys(hammer);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                        hammers[k][memory[num]] = bitwise[replacement[j] % 7](hammers[k][memory[num]], replacement[j]);
+                                    }
+                                });
+
+                            });
+
+                            currentLocation.area.forEach(row => {
+                                row.forEach((block, i, arr) => {
+                                    memory = Object.keys(block);
+
+                                    let num = mem[j] % memory.length;
+
+                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                    }
+
+
+                                    arr[i].fireBar.forEach((fireball, k, fireballs) => {
+                                        memory = Object.keys(fireball);
+
+                                        let num = mem[j] % memory.length;
+
+                                        if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                            fireballs[k][memory[num]] = bitwise[replacement[j] % 7](fireballs[k][memory[num]], replacement[j]);
+                                        }
+                                    });
+
+                                    arr[i].bullets.forEach((bullet, k, bullets) => {
+                                        memory = Object.keys(bullet);
+
+                                        let num = mem[j] % memory.length;
+
+                                        if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                            bullets[k][memory[num]] = bitwise[replacement[j] % 7](bullets[k][memory[num]], replacement[j]);
+                                        }
+                                    });
+
+                                });
+                            });
+
+                            powerups.forEach((powerup, i, arr) => {
+                                memory = Object.keys(powerup);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
+                            fireballs.forEach((fireball, i, arr) => {
+                                memory = Object.keys(fireball);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
+                            flames.forEach((flame, i, arr) => {
+                                memory = Object.keys(flame);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
+                            debris.forEach((debris, i, arr) => {
+                                memory = Object.keys(debris);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
+                            fireworks.forEach((fireworks, i, arr) => {
+                                memory = Object.keys(fireworks);
+
+                                let num = mem[j] % memory.length;
+
+                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
+                                }
+                            });
+
                         });
                     }
                 break;
