@@ -285,7 +285,7 @@ Player.prototype = {
 				this.velX *= this.friction;
 			}
 
-			if (Math.abs(this.velX) < this.stanardFriction || (Math.abs(this.velX) <= this.standardFriction*3) && this.isCrouching) {
+			if (Math.abs(this.velX) < this.standardFriction || ((Math.abs(this.velX) <= this.standardFriction*3) && this.isCrouching)) {
 				this.velX = 0;
 			}
 
