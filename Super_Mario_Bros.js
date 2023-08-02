@@ -828,10 +828,10 @@ const gameEngine = () => {
         let newX;
 
         if (game == "smb" && currentLocation == currentGame.level8_4Castle) {
-            currentGame.timeUntilNextFish--;
+            timeUntilNextFish--;
 
-            if (currentGame.timeUntilNextFish <= 0) {
-                currentGame.timeUntilNextFish = 50;
+            if (timeUntilNextFish <= 0) {
+                timeUntilNextFish = 50;
 
                 if (currentLocation.area[10][198].drawnX <= 120 && currentLocation.area[10][243].drawnX >= 600) {
                     currentLocation.enemies.push(new Enemy(random(100, width - shiftWidth * 4), height, 40, 40, "O", gravity, sounds, currentLocation.terrain, 0))
@@ -1954,7 +1954,7 @@ const gameEngine = () => {
 
                                 let num = mem[j]%memory.length;
 
-                                if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof mario[memory[num]])) {
                                     mario[memory[num]] = replacement[j];
                                 }
                             } else if (mem[j] % 8 == 1) {
@@ -1963,7 +1963,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = replacement[j];
                                     }
 
@@ -1973,7 +1973,7 @@ const gameEngine = () => {
 
                                             let num = mem[j]%memory.length;
 
-                                            if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                            if (!["string", "object", "boolean"].includes(typeof spinies[k][memory[num]])) {
                                                 spinies[k][memory[num]] = replacement[j];
                                             }
                                         });
@@ -1983,7 +1983,7 @@ const gameEngine = () => {
 
                                             let num = mem[j]%memory.length;
 
-                                            if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                            if (!["string", "object", "boolean"].includes(typeof hammers[k][memory[num]])) {
                                                 hammers[k][memory[num]] = replacement[j];
                                             }
                                         });
@@ -1996,7 +1996,7 @@ const gameEngine = () => {
 
                                         let num = mem[j]%memory.length;
 
-                                        if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                             arr[i][memory[num]] = replacement[j];
                                         }
 
@@ -2006,7 +2006,7 @@ const gameEngine = () => {
 
                                                 let num = mem[j]%memory.length;
 
-                                                if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                                if (!["string", "object", "boolean"].includes(typeof fireballs[k][memory[num]])) {
                                                     fireballs[k][memory[num]] = replacement[j];
                                                 }
                                             });
@@ -2016,7 +2016,7 @@ const gameEngine = () => {
 
                                                 let num = mem[j]%memory.length;
 
-                                                if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                                if (!["string", "object", "boolean"].includes(typeof bullets[k][memory[num]])) {
                                                     bullets[k][memory[num]] = replacement[j];
                                                 }
                                             });
@@ -2029,7 +2029,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = replacement[j];
                                     }
                                 });
@@ -2039,7 +2039,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = replacement[j];
                                     }
                                 });
@@ -2049,7 +2049,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = replacement[j];
                                     }
                                 });
@@ -2059,7 +2059,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = replacement[j];
                                     }
                                 });
@@ -2069,7 +2069,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = replacement[j];
                                     }
                                 });
@@ -2149,7 +2149,7 @@ const gameEngine = () => {
 
                                 let num = mem[j]%memory.length;
 
-                                if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof mario[memory[num]])) {
                                     mario[memory[num]] = bitwise[replacement[j]%7](mario[memory[num]], replacement[j]);
                                 }
                             } else if (mem[j] % 8 == 1) {
@@ -2158,7 +2158,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
 
@@ -2168,7 +2168,7 @@ const gameEngine = () => {
 
                                             let num = mem[j]%memory.length;
 
-                                            if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                            if (!["string", "object", "boolean"].includes(typeof spinies[k][memory[num]])) {
                                                 spinies[k][memory[num]] = bitwise[replacement[j]%7](spinies[k][memory[num]], replacement[j]);
                                             }
                                         });
@@ -2178,7 +2178,7 @@ const gameEngine = () => {
 
                                             let num = mem[j]%memory.length;
 
-                                            if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                            if (!["string", "object", "boolean"].includes(typeof hammers[k][memory[num]])) {
                                                 hammers[k][memory[num]] = bitwise[replacement[j]%7](hammers[k][memory[num]], replacement[j]);
                                             }
                                         });
@@ -2191,7 +2191,7 @@ const gameEngine = () => {
 
                                         let num = mem[j]%memory.length;
 
-                                        if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                             arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                         }
 
@@ -2201,7 +2201,7 @@ const gameEngine = () => {
 
                                                 let num = mem[j]%memory.length;
 
-                                                if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                                if (!["string", "object", "boolean"].includes(typeof fireballs[k][memory[num]])) {
                                                     fireballs[k][memory[num]] = bitwise[replacement[j]%7](fireballs[k][memory[num]], replacement[j]);
                                                 }
                                             });
@@ -2211,7 +2211,7 @@ const gameEngine = () => {
 
                                                 let num = mem[j]%memory.length;
 
-                                                if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                                if (!["string", "object", "boolean"].includes(typeof bullets[k][memory[num]])) {
                                                     bullets[k][memory[num]] = bitwise[replacement[j]%7](bullets[k][memory[num]], replacement[j]);
                                                 }
                                             });
@@ -2224,7 +2224,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2234,7 +2234,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2244,7 +2244,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2254,7 +2254,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2264,7 +2264,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2346,7 +2346,7 @@ const gameEngine = () => {
 
                                 let num = mem[j]%memory.length;
 
-                                if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof mario[memory[num]])) {
                                     mario[memory[num]] = bitwise[replacement[j]%7](mario[memory[num]], replacement[j]);
                                 }
                             } else if (mem[j] % 8 == 1) {
@@ -2355,7 +2355,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
 
@@ -2365,7 +2365,7 @@ const gameEngine = () => {
 
                                             let num = mem[j]%memory.length;
 
-                                            if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                            if (!["string", "object", "boolean"].includes(typeof spinies[k][memory[num]])) {
                                                 spinies[k][memory[num]] = bitwise[replacement[j]%7](spinies[k][memory[num]], replacement[j]);
                                             }
                                         });
@@ -2375,7 +2375,7 @@ const gameEngine = () => {
 
                                             let num = mem[j]%memory.length;
 
-                                            if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                            if (!["string", "object", "boolean"].includes(typeof hammers[k][memory[num]])) {
                                                 hammers[k][memory[num]] = bitwise[replacement[j]%7](hammers[k][memory[num]], replacement[j]);
                                             }
                                         });
@@ -2388,7 +2388,7 @@ const gameEngine = () => {
 
                                         let num = mem[j]%memory.length;
 
-                                        if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                             arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                         }
 
@@ -2398,7 +2398,7 @@ const gameEngine = () => {
 
                                                 let num = mem[j]%memory.length;
 
-                                                if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                                if (!["string", "object", "boolean"].includes(typeof fireballs[k][memory[num]])) {
                                                     fireballs[k][memory[num]] = bitwise[replacement[j]%7](fireballs[k][memory[num]], replacement[j]);
                                                 }
                                             });
@@ -2408,7 +2408,7 @@ const gameEngine = () => {
 
                                                 let num = mem[j]%memory.length;
 
-                                                if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                                if (!["string", "object", "boolean"].includes(typeof bullets[k][memory[num]])) {
                                                     bullets[k][memory[num]] = bitwise[replacement[j]%7](bullets[k][memory[num]], replacement[j]);
                                                 }
                                             });
@@ -2421,7 +2421,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2431,7 +2431,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2441,7 +2441,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2451,7 +2451,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2461,7 +2461,7 @@ const gameEngine = () => {
 
                                     let num = mem[j]%memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j]%7](arr[i][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2510,7 +2510,7 @@ const gameEngine = () => {
 
                             let num = mem[j] % memory.length;
 
-                            if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                            if (!["string", "object", "boolean"].includes(typeof mario[memory[num]])) {
                                 mario[memory[num]] = replacement[j];
                             }
 
@@ -2519,7 +2519,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = replacement[j];
                                 }
 
@@ -2529,7 +2529,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof spinies[k][memory[num]])) {
                                         spinies[k][memory[num]] = replacement[j];
                                     }
                                 });
@@ -2539,7 +2539,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof hammers[k][memory[num]])) {
                                         hammers[k][memory[num]] = replacement[j];
                                     }
                                 });
@@ -2552,7 +2552,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = replacement[j];
                                     }
 
@@ -2562,7 +2562,7 @@ const gameEngine = () => {
 
                                         let num = mem[j] % memory.length;
 
-                                        if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof fireballs[k][memory[num]])) {
                                             fireballs[k][memory[num]] = replacement[j];
                                         }
                                     });
@@ -2572,7 +2572,7 @@ const gameEngine = () => {
 
                                         let num = mem[j] % memory.length;
 
-                                        if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof bullets[k][memory[num]])) {
                                             bullets[k][memory[num]] = replacement[j];
                                         }
                                     });
@@ -2585,7 +2585,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = replacement[j];
                                 }
                             });
@@ -2595,7 +2595,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = replacement[j];
                                 }
                             });
@@ -2605,7 +2605,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = replacement[j];
                                 }
                             });
@@ -2615,7 +2615,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = replacement[j];
                                 }
                             });
@@ -2625,7 +2625,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = replacement[j];
                                 }
                             });
@@ -2703,7 +2703,7 @@ const gameEngine = () => {
 
                             let num = mem[j] % memory.length;
 
-                            if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                            if (!["string", "object", "boolean"].includes(typeof mario[memory[num]])) {
                                 mario[memory[num]] = bitwise[replacement[j] % 7](mario[memory[num]], replacement[j]);
                             }
                             currentLocation.enemies.forEach((enemy, i, arr) => {
@@ -2711,7 +2711,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
 
@@ -2720,7 +2720,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof spinies[k][memory[num]])) {
                                         spinies[k][memory[num]] = bitwise[replacement[j] % 7](spinies[k][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2729,7 +2729,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof hammers[k][memory[num]])) {
                                         hammers[k][memory[num]] = bitwise[replacement[j] % 7](hammers[k][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2740,7 +2740,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                     }
 
@@ -2749,7 +2749,7 @@ const gameEngine = () => {
 
                                         let num = mem[j] % memory.length;
 
-                                        if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof fireballs[k][memory[num]])) {
                                             fireballs[k][memory[num]] = bitwise[replacement[j] % 7](fireballs[k][memory[num]], replacement[j]);
                                         }
                                     });
@@ -2758,7 +2758,7 @@ const gameEngine = () => {
 
                                         let num = mem[j] % memory.length;
 
-                                        if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof bullets[k][memory[num]])) {
                                             bullets[k][memory[num]] = bitwise[replacement[j] % 7](bullets[k][memory[num]], replacement[j]);
                                         }
                                     });
@@ -2769,7 +2769,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -2779,7 +2779,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -2789,7 +2789,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -2799,7 +2799,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -2809,7 +2809,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -2890,7 +2890,7 @@ const gameEngine = () => {
 
                             let num = mem[j] % memory.length;
 
-                            if (!["string", "object"].includes(typeof mario[memory[num]])) {
+                            if (!["string", "object", "boolean"].includes(typeof mario[memory[num]])) {
                                 mario[memory[num]] = bitwise[replacement[j] % 7](mario[memory[num]], replacement[j]);
                             }
 
@@ -2899,7 +2899,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
 
@@ -2909,7 +2909,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof spinies[k][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof spinies[k][memory[num]])) {
                                         spinies[k][memory[num]] = bitwise[replacement[j] % 7](spinies[k][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2919,7 +2919,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof hammers[k][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof hammers[k][memory[num]])) {
                                         hammers[k][memory[num]] = bitwise[replacement[j] % 7](hammers[k][memory[num]], replacement[j]);
                                     }
                                 });
@@ -2932,7 +2932,7 @@ const gameEngine = () => {
 
                                     let num = mem[j] % memory.length;
 
-                                    if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                    if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                         arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                     }
 
@@ -2942,7 +2942,7 @@ const gameEngine = () => {
 
                                         let num = mem[j] % memory.length;
 
-                                        if (!["string", "object"].includes(typeof fireballs[k][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof fireballs[k][memory[num]])) {
                                             fireballs[k][memory[num]] = bitwise[replacement[j] % 7](fireballs[k][memory[num]], replacement[j]);
                                         }
                                     });
@@ -2952,7 +2952,7 @@ const gameEngine = () => {
 
                                         let num = mem[j] % memory.length;
 
-                                        if (!["string", "object"].includes(typeof bullets[k][memory[num]])) {
+                                        if (!["string", "object", "boolean"].includes(typeof bullets[k][memory[num]])) {
                                             bullets[k][memory[num]] = bitwise[replacement[j] % 7](bullets[k][memory[num]], replacement[j]);
                                         }
                                     });
@@ -2965,7 +2965,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -2975,7 +2975,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -2985,7 +2985,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -2995,7 +2995,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
@@ -3005,7 +3005,7 @@ const gameEngine = () => {
 
                                 let num = mem[j] % memory.length;
 
-                                if (!["string", "object"].includes(typeof arr[i][memory[num]])) {
+                                if (!["string", "object", "boolean"].includes(typeof arr[i][memory[num]])) {
                                     arr[i][memory[num]] = bitwise[replacement[j] % 7](arr[i][memory[num]], replacement[j]);
                                 }
                             });
