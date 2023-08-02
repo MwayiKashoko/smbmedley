@@ -2966,7 +2966,7 @@ Powerup.prototype = {
 			&& object.hitboxY < this.hitboxY+this.hitboxHeight) {
 			powerups.splice(powerups.indexOf(this), 1);
 
-			if (this.type != "PoisonMushroom") {
+			if (this.type != "PoisonMushroom" && object.invincibility <= 0) {
 				object.addScore(1000, this.drawnX, this.drawnY);
 			}
 
