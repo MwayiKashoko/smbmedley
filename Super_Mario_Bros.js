@@ -238,7 +238,7 @@ const gameEngine = () => {
     const setBackground = () => {
         if (currentLocation.terrain == "Underwater") {
             let water = new Image();
-            water.src = `${pathname}/images/waterTop.png`;
+            water.src = `${pathname}/images/WaterTop.png`;
 
             for (let i = 0; i < 17; i++) {
                 graphics.drawImage(water, i*40, 80, 40, 40);
