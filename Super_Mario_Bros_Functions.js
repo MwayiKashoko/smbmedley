@@ -79,7 +79,7 @@ function Player(lives, gravity, music, sounds, coins) {
     this.blockStandingOn = null;
     this.blockEntering = null;
     this.swimming = false;
-    this.type = "small"
+    this.type = "small";
 }
 
 Player.prototype = {
