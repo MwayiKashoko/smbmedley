@@ -442,7 +442,7 @@ Player.prototype = {
 			//this.velX = 0;
 
 			if (this.transition == "shrinking" && this.timeUntilNoTransition == 50) {
-				this.drawnY -= this.stanardHeight/2;
+				this.drawnY -= this.standardHeight/2;
 			}
 
 			if (this.timeUntilNoTransition <= 0) {
@@ -1270,9 +1270,6 @@ Block.prototype = {
 		this.falling = false;
 
 		this.changeImage();
-
-		//This is funny lol
-		//this.drawnY-=.1;
 	},
 
 	changeImage: function() {
