@@ -3035,7 +3035,7 @@ const gameEngine = () => {
 
                         currentLocation.area.forEach(row => {
                             row.forEach((block, i, arr) => {
-                                if (block.hasCollisions && !block.canEnter && !["Flagpole", "FullRedSpring", "FullGreenSpring", "6", "Bridge"].includes(block.type) && block.contains != "Vine") {
+                                if (block.hasCollisions && !block.canEnter && !["Flagpole", "FullRedSpring", "FullGreenSpring", "Bridge", "Axe"].includes(block.type) && block.storedType != "6" && block.contains != "Vine") {
                                     arr[i] = new Block(array[random(0, array.length-1)], block.constantX, block.constantY, block.constantX, block.constantY, block.constantWidth, block.constantHeight, sounds, currentLocation.terrain);
                                     arr[i].isEdge = false;
                                 }
@@ -3088,7 +3088,7 @@ const gameEngine = () => {
 
                         currentLocation.area.forEach(row => {
                             row.forEach((block, i, arr) => {
-                                if (block.hasCollisions && !block.canEnter && !["Flagpole", "FullRedSpring", "FullGreenSpring", "6", "Bridge"].includes(block.type) && block.contains != "Vine") {
+                                if (block.hasCollisions && !block.canEnter && !["Flagpole", "FullRedSpring", "FullGreenSpring", "Bridge", "Axe"].includes(block.type) && block.storedType != "6" && block.contains != "Vine") {
                                     arr[i] = new Block(array[random(0, array.length-1)], block.constantX, block.constantY, block.constantX, block.constantY, block.constantWidth, block.constantHeight, sounds, currentLocation.terrain);
                                     arr[i].isEdge = false;
                                 }
