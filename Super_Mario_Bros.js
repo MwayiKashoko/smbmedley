@@ -4,6 +4,9 @@ const gameEngine = () => {
     graphics.shadowOffsetX = 0;
     graphics.shadowOffsetY = 0;
 
+    const standardWidth = 40;
+    const standardHeight = 40;
+
     let state = "title screen";
     let timeUntilPlay = 150;
     let canUpdate = true;
@@ -41,17 +44,379 @@ const gameEngine = () => {
     let backgroundList = currentGame.backgroundList;
     let levels = currentGame.levels;
     let currentLocation = levels[level].areas[0];
+    let marioStartingY = 480
     let mario = currentGame.mario;
     let randomized = false;
     let codeUsed = false;
 
-    let memory
+    let memory;
     let code;
     let address = [];
     let replacement = [];
 
     let a = 0;
     let b = 0;
+
+    //What page are we on in the menu
+    let menuPage = 0;
+    //Current menu being shown
+    let blocksMenu = 1;
+
+    //Coordinates of menu button
+    const menuButtonX = width-shiftWidth*2+standardWidth/3;
+    const menuButtonY = height-standardHeight*(3/4);
+    const menuButtonWidth = standardWidth/2;
+    const menuButtonHeight = standardHeight/2;
+
+    const alternateButtonX = width-shiftWidth*2+standardWidth/4;
+    const alternateButtonY = height-standardHeight*1.5;
+    const alternateButtonWidth = standardWidth*1.5;
+    const alternateButtonHeight = standardHeight/2;
+
+    const terrainButtonX = width-shiftWidth*2;
+    const terrainButtonY = height-standardHeight*2.5;
+    const terrainButtonWidth = standardWidth*2;
+    const terrainButtonHeight = standardHeight/2;
+
+    const backgroundButtonX = width-shiftWidth*2;
+    const backgroundButtonY = height-standardHeight*3.5;
+    const backgroundButtonWidth = standardWidth*2;
+    const backgroundButtonHeight = standardHeight/2;
+
+    let currentBackground = "Overworld";
+    let backgrounds = ["Overworld", "Athletic", "End", "Overworld1", "Athletic1", "Hill", "SnowHill", "SnowOverworld", "MushroomHill", "UnderwaterHill", null];
+    let backgroundPos = 0;
+
+    const downloadButtonX = -shiftWidth;
+    const downloadButtonY = height-standardHeight*1.5;
+    const downloadButtonWidth = standardWidth*2;
+    const downloadButtonHeight = standardHeight/2;
+
+    const quitButtonX = -shiftWidth;
+    const quitButtonY = height-standardHeight*0.75;
+    const quitButtonWidth = standardWidth*2;
+    const quitButtonHeight = standardHeight/2;
+
+    const uploadButtonX = -shiftWidth;
+    const uploadButtonY = height-standardHeight*2.25;
+    const uploadButtonWidth = standardWidth*2;
+    const uploadButtonHeight = standardHeight/2;
+
+    const blockObject = {
+        " ": "Air",
+        "f": "Flagpole",
+        "q": "QuestionBlock",
+        "p": "QuestionBlock",
+        "r": "QuestionBlock",
+        "b": "Brick",
+        "0": "Brick",
+        "*": "Brick",
+        "s": "SpecialBlock",
+        "1": "Hidden Block",
+        "&": "Hidden Block",
+        "c": "Coin",
+        "{": "TopLeftPipe",
+        "}": "TopRightPipe",
+        "/": "LowerLeftPipe",
+        "|": "LowerRightPipe",
+        "g": "Ground",
+        "+": "SidewaysPipeUpperMiddle",
+        "-": "SidewaysPipeUpperRight",
+        "=": "SidewaysPipeLowerMiddle",
+        "_": "SidewaysPipeLowerRight",
+        ".": "Castle",
+        ",": "BigCastle",
+        "a": "Axe",
+        "n": "CannonBottom",
+        "w": "CannonMiddle",
+        "e": "CannonTop",
+        "y": "FullRedSpring",
+        "u": "LavaTop",
+        "i": "Lava",
+        "o": "ShortMovingPlatform",
+        "m": "MiddleMovingPlatform",
+        "?": "LongMovingPlatform",
+        "¿": "LongMovingPlatform",
+        "@": "LongMovingPlatform",
+        "#": "LongMovingPlatform",
+        "d": "MushroomLeft",
+        "h": "MushroomMiddle",
+        "j": "MushroomRight",
+        "k": "MushroomTop",
+        ":": "MushroomBottom",
+        "z": "Water",
+        "x": "WaterTop",
+        "~": "Princess",
+        "!": "Toad",
+        "(": "Brick",
+        ")": "Brick",
+        "$": "OverworldEmptyBlock",
+        "%": "OverworldEmptyBlock",
+        "<": "BowserBridge",
+        "£": "TowerWall",
+        "¢": "TowerTerrace",
+        "∞": "CastleGround",
+        "t": "Hidden Block",
+        "l": "Brick",
+        "2": "Brick",
+        "3": "LongMovingPlatform",
+        "4": "Vine1",
+        "5": "Vine2",
+        ">": "BridgeSupport",
+        "¡": "Bridge",
+        "™": "Coral",
+        "§": "MiddleMovingPlatform",
+        "¶": "MiddleMovingPlatform",
+        "•": "CloudLeft",
+        "ª": "CloudMiddle",
+        "º": "CloudRight",
+        "œ": "MiddleMovingPlatform",
+        "∑": "OverworldEmptyBlock",
+        "®": "Hidden Block",
+        "†": "FullGreenSpring",
+        "¥": "MiddleMovingPlatform"
+    };
+
+    const containsObject = {
+        "q": "coin",
+        "(": "powerup",
+        ")": "1up",
+        "p": "powerup",
+        "1": "1up",
+        "&": "coin",
+        "0": "10 coins",
+        "*": "Star",
+        "r": "PoisonMushroom",
+        "t": "PoisonMushroom",
+        "l": "PoisonMushroom",
+        "2": "Vine",
+        "®": "powerup"
+    }
+
+    const directionObject = {
+        "?": "down",
+        "¿": "up",
+        "@": "cyclic1",
+        "#": "cyclic2",
+        "m": "cyclic2",
+        "3": "drop",
+        "¶": "drop",
+        "o": "drop",
+        "§": "down",
+        "œ": "right",
+        "¥": "cyclic1"
+    }
+
+    let blocksImages = [];
+
+    for (const key in blockObject) {
+        blocksImages.push(
+            {
+                "width": standardWidth,
+                "height": standardHeight,
+                "letter": key,
+                "img": new Image(),
+                "containsImage": new Image(),
+                "contains": null,
+                "directionMoving": null,
+                "terrain": null,
+                "hasImage": true,
+                "isAlt": false,
+                "isAnimated": false,
+            }
+        );
+
+        const lastIndex = blocksImages[blocksImages.length-1];
+        const currentName = blockObject[key];
+
+        lastIndex.contains = containsObject[lastIndex.letter];
+        lastIndex.directionObject = directionObject[lastIndex.letter];
+
+        switch (lastIndex.contains) {
+            case "coin":
+                lastIndex.containsImage.src = `${pathname}/images/Coin1.png`;
+                break;
+
+            case "powerup":
+                lastIndex.containsImage.src = `${pathname}/images/Mushroom.png`;
+                break;
+
+            case "1up":
+                lastIndex.containsImage.src = `${pathname}/images/1up.png`;
+                break;
+
+            case "Star":
+                lastIndex.containsImage.src = `${pathname}/images/Star3.png`;
+                break;
+
+            case "PoisonMushroom":
+                lastIndex.containsImage.src = `${pathname}/images/PoisonMushroom.png`;
+                break;
+
+            case "Vine":
+                lastIndex.containsImage.src = `${pathname}/images/Vine1.png`;
+                break;
+
+            default:
+                break;
+        }
+
+        if (["?", "¿", "@", "#", "3", "6"].includes(lastIndex.letter)) {
+            lastIndex.width = 120;
+            lastIndex.height = 20;
+        } else if (["m", "§", "¶", "œ", "¥"].includes(lastIndex.letter)) {
+            lastIndex.width = 80;
+            lastIndex.height = 20;
+        } else if (lastIndex.letter == "<") {
+            lastIndex.width = 520;
+        } else if (["!", "~"].includes(lastIndex.letter)) {
+            lastIndex.height = 60;
+        } else if (lastIndex.letter == "y") {
+            lastIndex.height = 80;
+        } else if (lastIndex.letter == "f") {
+            lastIndex.height = 420;
+        } else if (lastIndex.letter == ".") {
+            lastIndex.width = 200;
+            lastIndex.height = 200;
+        } else if (lastIndex.letter == ",") {
+            lastIndex.width = 360;
+            lastIndex.height = 440;
+        }
+
+        if (["1", "&", "t", "®", " "].includes(lastIndex.letter)) {
+            lastIndex.hasImage = false;
+            continue;
+        }
+
+        lastIndex.img.src = `${pathname}/images/${currentName}.png`;
+
+        const altBlocks = ["QuestionBlock", "Brick", "Ground", "SpecialBlock"];
+
+        if (altBlocks.includes(blockObject[lastIndex.letter])) {
+            lastIndex.isAlt = true;
+            lastIndex.terrain = currentLocation.terrain;
+        }
+
+        const animatedBlocks = ["QuestionBlock", "Coin", "Axe"];
+
+        if (animatedBlocks.includes(blockObject[lastIndex.letter])) {
+            lastIndex.isAnimated = true;
+        }
+
+        if (lastIndex.isAnimated && lastIndex.isAlt) {
+            lastIndex.img.src = `${pathname}/images/${lastIndex.terrain}${currentName}1.png`;
+        } else if (lastIndex.isAnimated) {
+            lastIndex.img.src = `${pathname}/images/${currentName}1.png`;
+        } else if (lastIndex.isAlt) {
+            lastIndex.img.src = `${pathname}/images/${lastIndex.terrain}${currentName}.png`;
+        }
+    }
+
+    blocksImages.sort((a, b) => {
+        if (a.width == b.width) {
+            return a.height-b.height;
+        }
+
+        return a.width-b.width;
+    });
+
+    let tempBlockArr = [];
+
+    let blocksImagesPagesInt = 0;
+
+    while (blocksImages.length) {
+        if (blocksImagesPagesInt % 6 == 0) {
+            tempBlockArr.push([]);
+        }
+
+        tempBlockArr[Math.floor(blocksImagesPagesInt/6)].push(blocksImages.splice(0, 2));
+
+        blocksImagesPagesInt++;
+    }
+
+    blocksImages = tempBlockArr;
+
+    //console.log(blocksImages);
+
+    const enemyObject = {
+        "G": "Goomba1",
+        "K": "GreenKoopa1",
+        "B": "Bowser1",
+        "Q": "BlooperSwimming",
+        "W": "BulletBill",
+        "E": "BuzzyBeetle1",
+        "L": "NormalLakitu",
+        "P": "GreenParatroopa1",
+        "F": "GreenParatroopa1",
+        "I": "GreenPlant1",
+        "H": "HammerBros1",
+        "R": "RedKoopa1",
+        "D": "RedParatroopa1",
+        "T": "Podobo",
+        "U": "RedPlant1",
+        "S": "Spiny1",
+        "O": "RedCheepCheep1"
+    };
+
+    let enemyImages = [];
+
+    for (const key in enemyObject) {
+        enemyImages.push(
+            {
+                "width": standardWidth,
+                "height": standardHeight,
+                "letter": key,
+                "img": new Image()
+            }
+        );
+
+        const lastIndex = enemyImages[enemyImages.length-1];
+        const currentName = enemyObject[key];
+
+        if (currentName.indexOf("Koopa") > -1 || currentName.indexOf("Paratroopa") > -1) {
+            lastIndex.height = 60;
+        } else if (currentName.indexOf("Plant") > -1) {
+            if (lastIndex.height > 0) {
+                lastIndex.height = 60;
+            }
+        } else if (currentName.indexOf("Bowser") > -1) {
+            lastIndex.width = 80;
+            lastIndex.height = 80;
+        } else if (currentName.indexOf("Lakitu") > -1) {
+            lastIndex.height = 60;
+        } else if (currentName.indexOf("HammerBros") > -1) {
+            lastIndex.height = 60;
+        }
+
+        lastIndex.img.src = `${pathname}/images/${currentName}.png`;
+    }
+
+    enemyImages.sort((a, b) => a.height-b.height);
+
+    //console.log(enemyImages);
+
+    let tempEnemyArr = [];
+
+    while(enemyImages.length) {
+        tempEnemyArr.push(enemyImages.splice(0,2));
+    }
+
+    enemyImages = tempEnemyArr;
+
+    //console.log(enemyImages);
+
+    let imageSelected = {
+        "img": new Image(),
+        "width": standardWidth,
+        "height": standardHeight,
+        "containsImage": new Image(),
+        "contains": null,
+        "directionMoving": null,
+        "terrain": null,
+        "letter": null
+    };
+
+    let levelOffset = 0;
 
     //Logic for determining what happens when a key is pressed
     document.addEventListener("keydown", (key) => {
@@ -63,12 +428,17 @@ const gameEngine = () => {
             console.clear();
         }
 
+        if (key.keyCode == 27 && state == "title screen") {
+            quit = true;
+        }
+
         if (state == "game") {
             if (paused) {
                 if (key.keyCode == 38 || key.keyCode == 40) {
                     shift++;
                 } else if (key.keyCode == 13 && shift%2 == 1 && !key.repeat) {
                     quit = true;
+                    uploadLevelInput.value = "";
                 }
             }
 
@@ -151,10 +521,64 @@ const gameEngine = () => {
             if (key.keyCode == 38 || key.keyCode == 40) {
                 shift++;
             } else if (key.keyCode == 13) {
-                //starts up the game
-                state = "loading";
+                if (game == "smm") {
+                    if (shift % 2 == 0) {
+                        state = "create level";
+
+                        currentLocation = {
+                            "area": [],
+                            "terrain": "Overworld",
+                            "color": "#9391ff",
+                            "background": null,
+                            "startingY": 80
+                        };
+
+                        for (let i = 0; i < 13; i++) {
+                            let arr16 = [];
+
+                            for (let j = 0; j < 16; j++) {
+                                arr16.push(" ");
+                            }
+
+                            currentLocation.area.push(arr16);
+                        }
+
+                        for (let i = 13; i < 15; i++) {
+                            let arr16 = [];
+
+                            for (let j = 0; j < 16; j++) {
+                                arr16.push("g");
+                            }
+
+                            currentLocation.area.push(arr16);
+                        }
+                    } else {
+                        uploadLevelInput.click();
+                    }
+                } else {
+                    //starts up the game
+                    state = "loading";
+                }
+            }
+        } else if (state == "create level") {
+            if (key.keyCode == 37) {
+                if (levelOffset > 0) {
+                    levelOffset--;
+                }
+            } else if (key.keyCode == 39) {
+                levelOffset++;
+
+                for (let i = 0; i < currentLocation.area.length-2; i++) {
+                    currentLocation.area[i].push(" ");
+                }
+
+                for (let i = currentLocation.area.length-2; i < currentLocation.area.length; i++) {
+                    currentLocation.area[i].push("g");
+                }
             }
         }
+
+        //console.log(currentLocation)
     });
 
     //What to do when a key is released
@@ -176,6 +600,279 @@ const gameEngine = () => {
         }
 
         //currentGame.keyup(key);
+    });
+
+    uploadLevelInput.addEventListener("change", function() {
+        if (game == "smm") {
+            let fr = new FileReader();
+            fr.readAsText(this.files[0]);
+
+            fr.onload=function(){ 
+                try {
+                    let levelFile = JSON.parse(fr.result);
+
+                    if (state == "title screen") {
+                        currentGame.levelMap = levelFile.map;
+                        currentGame.level1_1Area = new Area(currentGame.levelMap, levelFile.terrain, true, levelFile.color, currentGame.sounds, levelFile.background)
+                        currentGame.level1_1 = new Level([currentGame.level1_1Area]);
+                        currentGame.levels["1-1"] = currentGame.level1_1;
+
+                        music = currentGame.music;
+                        sounds = currentGame.sounds;
+                        backgroundList = currentGame.backgroundList;
+                        backgroundPos = levelFile.backgroundPos;
+                        levels = currentGame.levels;
+                        currentLocation = levels[level].areas[0];
+                        currentLocation.background = currentGame.backgroundList[levelFile.backgroundPos];
+                        mario = currentGame.mario;
+                        mario.drawnY = levelFile.startingY;
+                        mario.startingY = levelFile.startingY;
+
+                        state = "loading";
+
+                        uploadLevelInput.value = "";
+                    } else if (state == "create level") {
+                        let oldTerrain = currentLocation.terrain;
+
+                        currentLocation.area = levelFile.map;
+                        currentLocation.terrain = levelFile.terrain;
+                        currentLocation.color = levelFile.color;
+                        currentBackground = backgrounds[levelFile.backgroundPos];
+                        marioStartingY = levelFile.startingY;
+
+                        canvas.style.background = currentLocation.color;
+
+                        for (let i = 0; i < blocksImages.length; i++) {
+                            for (let j = 0; j < blocksImages[i].length; j++) {
+                                for (let k = 0; k < blocksImages[i][j].length; k++) {
+                                    if (blocksImages[i][j][k].isAlt) {
+                                        blocksImages[i][j][k].img.src = blocksImages[i][j][k].img.src.replace(oldTerrain, currentLocation.terrain);
+
+                                        //console.log(blocksImages[i][j][k].img.src);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch(error) {
+                    alert("Not correct level format");
+                    let levelFile = JSON.parse(fr.result);
+                    //console.log(levelFile.map);
+                }
+            } 
+        }
+    });
+
+    let downloadedLevel = {
+        "map": null, 
+        "terrain": "Overworld",
+        "color": "#9391ff",
+        "background": null,
+        "backgroundPos": backgrounds.length-1,
+        "startingY": 80
+    };
+
+    canvas.addEventListener("click", function(e) {
+        let mouseX = e.offsetX-shiftWidth;
+        let mouseY = e.offsetY;
+
+        if (game == "smm" && state == "create level") {
+            if (mouseX >= menuButtonX && mouseY >= menuButtonY && mouseX <= menuButtonX+menuButtonWidth && mouseY <= menuButtonY+menuButtonHeight) {
+                if (menuPage > 0) {
+                    menuPage -= 2;
+                }
+            }
+
+            if (mouseX >= menuButtonX + standardWidth/1.25 && mouseY >= menuButtonY && mouseX <= (menuButtonX + standardWidth/1.25) +menuButtonWidth && mouseY <= menuButtonY+menuButtonHeight) {
+                if (menuPage < 4) {
+                    menuPage += 2;
+                }
+            }
+
+            if (mouseX >= alternateButtonX && mouseY >= alternateButtonY && mouseX <= alternateButtonX+alternateButtonWidth && mouseY <= alternateButtonY+alternateButtonHeight) {
+                blocksMenu++;
+            }
+
+            if (mouseX >= downloadButtonX && mouseX <= downloadButtonX+downloadButtonWidth && mouseY >= downloadButtonY && mouseY <= downloadButtonY+downloadButtonHeight) {
+                downloadedLevel.map = currentLocation.area;
+                downloadedLevel.terrain = currentLocation.terrain;
+                downloadedLevel.color = currentLocation.color;
+                downloadedLevel.background = `${pathname}/images/${currentBackground}Background.png`;
+                downloadedLevel.backgroundPos = backgroundPos%backgrounds.length;
+
+                if (currentBackground == null) {
+                    downloadedLevel.background = null;
+                }
+
+                downloadedLevel.startingY = marioStartingY;
+
+                const blob = new Blob([JSON.stringify(downloadedLevel, null, 4)], {type: "application/json"});
+
+                // Creating a temporary URL for the blob
+                const fileUrl = URL.createObjectURL(blob);
+
+                // Creating an <a> element to trigger the download
+                const downloadLink = document.createElement('a');
+                downloadLink.href = fileUrl;
+                downloadLink.download = 'level.json'; // File name
+
+                // Appending the link to the DOM and triggering the click event
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+
+                // Cleanup: removing the temporary URL and link from the DOM
+                setTimeout(() => {
+                    URL.revokeObjectURL(fileUrl);
+                    document.body.removeChild(downloadLink);
+                }, 0);
+            }
+
+            if (mouseX >= terrainButtonX && mouseY >= terrainButtonY && mouseX <= terrainButtonX+terrainButtonWidth && mouseY <= terrainButtonY+terrainButtonHeight) {
+                let oldTerrain = currentLocation.terrain;
+
+                if (currentLocation.terrain == "Overworld") {
+                    currentLocation.terrain = "Underground";
+                    currentLocation.color = "black";
+                } else if (currentLocation.terrain == "Underground") {
+                    currentLocation.terrain = "Underwater";
+                    currentLocation.color = "#9391ff";
+                } else if (currentLocation.terrain == "Underwater") {
+                    currentLocation.terrain = "Castle";
+                    currentLocation.color = "black";
+                } else {
+                    currentLocation.terrain = "Overworld";
+                    currentLocation.color = "#9391ff";
+                }
+
+                canvas.style.background = currentLocation.color;
+
+                for (let i = 0; i < blocksImages.length; i++) {
+                    for (let j = 0; j < blocksImages[i].length; j++) {
+                        for (let k = 0; k < blocksImages[i][j].length; k++) {
+                            if (blocksImages[i][j][k].isAlt) {
+                                blocksImages[i][j][k].img.src = blocksImages[i][j][k].img.src.replace(oldTerrain, currentLocation.terrain);
+
+                                //console.log(blocksImages[i][j][k].img.src);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (mouseX >= backgroundButtonX && mouseX <= backgroundButtonX+backgroundButtonWidth && mouseY >= backgroundButtonY && mouseY <= backgroundButtonY+backgroundButtonHeight) {
+                backgroundPos++;
+
+                currentBackground = backgrounds[backgroundPos%backgrounds.length];
+            }
+
+            if (mouseX >= quitButtonX && mouseX <= quitButtonX+quitButtonWidth && mouseY >= quitButtonY && mouseY <= quitButtonY+quitButtonHeight) {
+                quit = true;
+            }
+
+            if (mouseX >= uploadButtonX && mouseX <= uploadButtonX+uploadButtonWidth && mouseY >= uploadButtonY && mouseY <= uploadButtonY+uploadButtonHeight) {
+                uploadLevelInput.click();
+            }
+
+            if (mouseX >= width-shiftWidth*1.75 && mouseY >= standardHeight*2 && mouseX <= width-shiftWidth*1.25 && mouseY <= standardHeight*3) {
+                imageSelected.img.src = mario.img.src;
+            }
+
+            if (blocksMenu % 2 == 0) {
+                for (let i = 0; i < enemyImages.length; i++) {
+                    for (let j = 0; j < enemyImages[i].length; j++) {
+                        let inX = false;
+
+                        if (enemyImages[i].length == 2) { 
+                            if (mouseX >= (j+0.25)*standardWidth-shiftWidth && mouseX <= (j+0.25)*standardWidth-shiftWidth+enemyImages[i][j].width/2.5) {
+                                inX = true;
+                            }
+                        } else {
+                            if (mouseX >= (j+.5)*standardWidth-shiftWidth && mouseX <= (j+0.25)*standardWidth-shiftWidth+enemyImages[i][j].width/2.5) {
+                                inX = true;
+                            }
+                        } 
+
+                        if (inX && mouseY >= (i+3)*standardHeight && mouseY <= (i+3)*standardHeight+enemyImages[i][j].height/2.5) {
+                            imageSelected.img.src = enemyImages[i][j].img.src;
+                            imageSelected.width = enemyImages[i][j].width;
+                            imageSelected.height = enemyImages[i][j].height;
+                            imageSelected.containsImage = new Image();
+                            imageSelected.directionMoving = null;
+                            imageSelected.terrain = null;
+                            imageSelected.letter = enemyImages[i][j].letter;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < blocksImages[menuPage].length; i++) {
+                    for (let j = 0; j < blocksImages[menuPage][i].length; j++) {
+                        if (mouseX >= (j+0.25)*standardWidth-shiftWidth && mouseY >= (i+5)*standardHeight && mouseX <= (j+0.25)*standardWidth-shiftWidth+blocksImages[menuPage][i][j].width/2.5 && mouseY <= (i+5)*standardHeight+blocksImages[menuPage][i][j].height/2.5) {
+                            imageSelected.img.src = blocksImages[menuPage][i][j].img.src;
+                            imageSelected.width = blocksImages[menuPage][i][j].width;
+                            imageSelected.height = blocksImages[menuPage][i][j].height;
+                            imageSelected.containsImage.src = blocksImages[menuPage][i][j].containsImage.src;
+                            imageSelected.contains = blocksImages[menuPage][i][j].contains;
+                            imageSelected.directionMoving = blocksImages[menuPage][i][j].directionMoving;
+                            imageSelected.terrain = blocksImages[menuPage][i][j].terrain;
+                            imageSelected.letter = blocksImages[menuPage][i][j].letter;
+                        }
+                    }
+                }
+
+                for (let i = 0; i < blocksImages[menuPage+1].length; i++) {
+                    for (let j = 0; j < blocksImages[menuPage+1][i].length; j++) {
+                        if (mouseX >= width-shiftWidth*2 + (j+0.25)*standardWidth && mouseY >= (i+5)*standardHeight && mouseX <= width-shiftWidth*2 + (j+0.25)*standardWidth+blocksImages[menuPage+1][i][j].width/2.5 && mouseY <= (i+5)*standardHeight+blocksImages[menuPage+1][i][j].height/2.5) {
+                            imageSelected.img.src = blocksImages[menuPage+1][i][j].img.src;
+                            imageSelected.width = blocksImages[menuPage+1][i][j].width;
+                            imageSelected.height = blocksImages[menuPage+1][i][j].height;
+                            imageSelected.containsImage.src = blocksImages[menuPage+1][i][j].containsImage.src;
+                            imageSelected.contains = blocksImages[menuPage+1][i][j].contains;
+                            imageSelected.directionMoving = blocksImages[menuPage+1][i][j].directionMoving;
+                            imageSelected.terrain = blocksImages[menuPage+1][i][j].terrain;
+                            imageSelected.letter = blocksImages[menuPage+1][i][j].letter;
+
+                            //console.log(imageSelected)
+                        }
+                    }
+                }
+            }
+
+            if (imageSelected.img.src && mouseX >= 0 && mouseX <= 640 && mouseY >= 0 && mouseY <= height) {
+                if (imageSelected.img.src == mario.img.src) {
+                    marioStartingY = Math.floor(mouseY/standardHeight)*standardHeight;
+
+                    //console.log(marioStartingY);
+                } else {
+                    currentLocation.area[Math.floor(mouseY/standardHeight)][Math.floor(mouseX/standardWidth)+levelOffset] = imageSelected.letter;
+                }
+            }
+        }
+    });
+
+    let mousedown = false;
+
+    canvas.addEventListener("mousedown", function(e) {
+        mousedown = true;
+    });
+
+    canvas.addEventListener("mouseup", function(e) {
+        mousedown = false;
+    });
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    canvas.addEventListener("mousemove", function(e) {
+        mouseX = e.offsetX-shiftWidth;
+        mouseY = e.offsetY;
+
+        if (mousedown) {
+            if (imageSelected.img.src && mouseX >= 0 && mouseX <= 640 && mouseY >= 0 && mouseY < height) {
+                if (imageSelected.img.src != mario.img.src) {
+                    currentLocation.area[Math.floor(mouseY/standardHeight)][Math.floor(mouseX/standardWidth)+levelOffset] = imageSelected.letter;
+                }
+            }
+        }
     });
 
     //Allows a near unnoticable loop to be created for the music
@@ -241,7 +938,7 @@ const gameEngine = () => {
             water.src = `${pathname}/images/WaterTop.png`;
 
             for (let i = 0; i < 17; i++) {
-                graphics.drawImage(water, i*40, 80, 40, 40);
+                graphics.drawImage(water, i*standardWidth, standardHeight*2, standardWidth, standardHeight);
             }
 
             graphics.fillStyle = "#62adff";
@@ -283,7 +980,7 @@ const gameEngine = () => {
         }
 
         for (let i = 0; i < coinList.length; i++) {
-            graphics.drawImage(coinList[i].img, Math.round(coinList[i].xValue), Math.round(coinList[i].yValue), 20, 40);
+            graphics.drawImage(coinList[i].img, Math.round(coinList[i].xValue), Math.round(coinList[i].yValue), standardWidth/2, standardHeight);
         }
     }
 
@@ -328,7 +1025,7 @@ const gameEngine = () => {
     const addEnemy = (x, y) => {
         const array = ["G", "K", "B", "Q", "W", "E", "L", "P", "F", "I", "H", "R", "D", "T", "U", "A", "S"];
 
-        currentLocation.enemies.push(new Enemy(x, y, 40, 40, array[random(0, array.length-1)], gravity, sounds, currentLocation.terrain, null))
+        currentLocation.enemies.push(new Enemy(x, y, standardWidth, standardHeight, array[random(0, array.length-1)], gravity, sounds, currentLocation.terrain, null))
     }
 
     const reset = () => {
@@ -407,12 +1104,18 @@ const gameEngine = () => {
         timeUntilNextFireball = 0;
         fireballsThrown = 0;
 
+        const startingY = mario.startingY;
+
         mario = new Player(mario.lives, gravity, music, sounds, mario.coins);
 
         mario.isBig ? mario.drawnY = 440 : mario.drawnY = 480;
 
         if (stage == 4) {
             mario.drawnY = 240-(mario.height-40);
+        }
+
+        if (game == "smm") {
+            mario.drawnY = startingY;
         }
 
         powerups = [];
@@ -443,6 +1146,10 @@ const gameEngine = () => {
 
         if (stage == 4) {
             mario.drawnY = 240-(mario.height-40);
+        }
+
+        if (game == "smm") {
+            mario.drawnY = mario.startingY;
         }
 
         level = `${world}-${stage}`;
@@ -834,7 +1541,7 @@ const gameEngine = () => {
                 timeUntilNextFish = 50;
 
                 if (currentLocation.area[10][198].drawnX <= 120 && currentLocation.area[10][243].drawnX >= 600) {
-                    currentLocation.enemies.push(new Enemy(random(100, width - shiftWidth * 4), height, 40, 40, "O", gravity, sounds, currentLocation.terrain, 0))
+                    currentLocation.enemies.push(new Enemy(random(100, width - shiftWidth * 4), height, standardWidth, standardHeight, "O", gravity, sounds, currentLocation.terrain, 0))
                 }
             }
 
@@ -956,13 +1663,37 @@ const gameEngine = () => {
             fireworks[0].img.src = `${pathname}/images/Firework${(Math.floor(fireworks[0].existence/10))%3+1}.png`;
             fireworks[0].existence++;
 
-            graphics.drawImage(fireworks[0].img, fireworks[0].x, fireworks[0].y, 40, 40);
+            graphics.drawImage(fireworks[0].img, fireworks[0].x, fireworks[0].y, standardWidth, standardHeight);
 
             if (fireworks[0].existence > 30) {
                 mario.addScore(500, -100, -100);
                 fireworks.shift();
             }
         }
+    }
+
+    const canvas_arrow = (headlen, fromx, fromy, tox, toy, doubleSided) => {
+        let dx = tox - fromx;
+        let dy = toy - fromy;
+        let angle = Math.atan2(dy, dx);
+
+        graphics.strokeStyle = "white";
+
+        graphics.beginPath();
+        graphics.moveTo(fromx, fromy);
+        graphics.lineTo(tox, toy);
+        graphics.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        graphics.moveTo(tox, toy);
+        graphics.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+
+        if (doubleSided) {
+            graphics.moveTo(fromx, fromy);
+            graphics.lineTo(fromx + headlen * Math.cos(angle - Math.PI / 6), fromy + headlen * Math.sin(angle - Math.PI / 6));
+            graphics.moveTo(fromx, fromy);
+            graphics.lineTo(fromx + headlen * Math.cos(angle + Math.PI / 6), fromy + headlen * Math.sin(angle + Math.PI / 6));
+        }
+
+        graphics.stroke();
     }
 
     const draw = () => {
@@ -972,25 +1703,27 @@ const gameEngine = () => {
 
         graphics.fillStyle = "white";
 
-        //draws the text to the screen
-        graphics.font = "25px smb";
-        graphics.fillText("MARIO", 100, 30);
-        graphics.fillText(("00000" + score).slice(-6), 110, 50);
-        const coinImageNumber = Math.floor(time%50/10)+1;
+        if (state != "create level") {
+            //draws the text to the screen
+            graphics.font = "25px smb";
+            graphics.fillText("MARIO", 100, 30);
+            graphics.fillText(("00000" + score).slice(-6), 110, 50);
+            const coinImageNumber = Math.floor(time%50/10)+1;
 
-        if (state != "loading") {
-            currentGame.hudCoin.src = `${pathname}/images/hudCoin${coinImageNumber > 3 ? (coinImageNumber == 4 ? 2 : 1) : coinImageNumber}.png`;
-        } else if (currentGame.hudCoin.src != `${pathname}/images/hudCoin1.png`) {
-            currentGame.hudCoin.src = `${pathname}/images/hudCoin1.png`;
+            if (state != "loading") {
+                currentGame.hudCoin.src = `${pathname}/images/hudCoin${coinImageNumber > 3 ? (coinImageNumber == 4 ? 2 : 1) : coinImageNumber}.png`;
+            } else if (currentGame.hudCoin.src != `${pathname}/images/hudCoin1.png`) {
+                currentGame.hudCoin.src = `${pathname}/images/hudCoin1.png`;
+            }
+
+            graphics.drawImage(currentGame.hudCoin, 220, 32, 20, 20);
+            graphics.drawImage(currentGame.xImage, 237, 32, 20, 20)
+            graphics.fillText("" + ("0" + mario.coins).slice(-2), 275, 50);
+            graphics.fillText("WORLD", 400, 30);
+            graphics.fillText(level, 400, 50)
+            graphics.fillText("TIME", 550, 30);
+            graphics.fillText(("00" + gameTime).slice(-3), 555, 50);
         }
-
-        graphics.drawImage(currentGame.hudCoin, 220, 32, 20, 20);
-        graphics.drawImage(currentGame.xImage, 237, 32, 20, 20)
-        graphics.fillText("" + ("0" + mario.coins).slice(-2), 275, 50);
-        graphics.fillText("WORLD", 400, 30);
-        graphics.fillText(level, 400, 50)
-        graphics.fillText("TIME", 550, 30);
-        graphics.fillText(("00" + gameTime).slice(-3), 555, 50);
 
         if (state == "title screen") {
             //What to do if you are on the title screen
@@ -1027,6 +1760,9 @@ const gameEngine = () => {
             } else if (game == "smbtll") {
                 graphics.fillText("Mario Game", width/2-shiftWidth, 375);
                 graphics.fillText("Luigi Game", width/2-shiftWidth, 425);
+            } else if (game == "smm") {
+                graphics.fillText("Create Level", width/2-shiftWidth, 375);
+                graphics.fillText("Upload Level", width/2-shiftWidth, 425);
             }
 
             graphics.drawImage(currentGame.cursor, 150, 355+shift%2*50, 20, 20);
@@ -1049,7 +1785,7 @@ const gameEngine = () => {
                 let smallMario = new Image();
                 smallMario.src = `${pathname}/images/smallMarioStanding.png`;
                 graphics.fillText(`world ${level}`, width/2-shiftWidth, 200);
-                graphics.drawImage(smallMario, width/2-75-shiftWidth, 240, 40, 40);
+                graphics.drawImage(smallMario, width/2-75-shiftWidth, 240, standardWidth, standardHeight);
                 graphics.drawImage(currentGame.xImage, width/2-shiftWidth, 250, 20, 20);
                 graphics.fillText(mario.lives, 460-shiftWidth, 270);
             } else {
@@ -1363,7 +2099,7 @@ const gameEngine = () => {
 
                                         if (block.bumping > 0 && j-1 >= 0 && currentLocation.area[j-1][i].type == "Coin") {
                                             currentLocation.area[j-1][i].type = "Air";
-                                            mario.addCoin(block.drawnX+10, block.drawnY-40);
+                                            mario.addCoin(block.drawnX+10, block.drawnY-standardHeight);
                                             mario.coins++;
                                         }
 
@@ -1546,7 +2282,7 @@ const gameEngine = () => {
                         }
 
                         if (enemy.type == "RedKoopa" && !enemy.inShell && enemy.drawnY == enemy.lastGroundY) {
-                            let row = currentLocation.area.filter((row, i, arr) => i*40 >= enemy.drawnY+enemy.height && (i+1)*40 <= enemy.drawnY+enemy.height+40);
+                            let row = currentLocation.area.filter((row, i, arr) => i*standardWidth >= enemy.drawnY+enemy.height && (i+1)*standardHeight <= enemy.drawnY+enemy.height+standardHeight);
 
                             if (row.length > 0) {
                                 row[0].forEach((block, i, arr) => {
@@ -1652,7 +2388,7 @@ const gameEngine = () => {
                     }
 
                     if (world < 8 && timeUntilNextFlame <= 0 && currentLocation.enemies != undefined && bowser.alive && bowser.drawnX > newWidth && currentLocation.area[0][84].drawnX < newWidth && currentLocation.terrain == "Castle") {
-                        flames.push(new Projectile("BowserFlame", width, 260+40*random(0, 2), "left", 0, sounds));
+                        flames.push(new Projectile("BowserFlame", width, 260+standardHeight*random(0, 2), "left", 0, sounds));
                         sounds[13].currentTime = 0;
                         sounds[13].play();
 
@@ -1860,8 +2596,295 @@ const gameEngine = () => {
         graphics.fillRect(-shiftWidth, 0, shiftWidth, height);
         graphics.fillRect(newWidth, 0, shiftWidth, height);
 
+        if (state == "create level") {
+            /*if (music.src != "") {
+                music.pause();
+
+                music.src = "";
+                music.play();
+            }*/
+
+            music.pause();
+
+            graphics.strokeStyle = "white";
+            graphics.lineWidth = 1;
+
+            //Grid lines
+            for (let i = 0; i < width/standardWidth-3; i++) {
+                graphics.beginPath();
+                graphics.moveTo(i * standardWidth, 0);
+                graphics.lineTo(i * standardWidth, height);
+                graphics.stroke();
+            }
+
+            for (let i = 0; i < height/standardHeight; i++) {
+                graphics.beginPath();
+                graphics.moveTo(0, i * standardHeight);
+                graphics.lineTo(width-shiftWidth*2, i * standardHeight);
+                graphics.stroke();
+            }
+
+            //Buttons that allow the user to switch pages between blocks/enemies
+            graphics.fillStyle = "green";
+            graphics.fillRect(menuButtonX, menuButtonY, menuButtonWidth, menuButtonHeight);
+            graphics.fillRect(menuButtonX + standardWidth/1.25, menuButtonY, menuButtonWidth, menuButtonHeight);
+            graphics.font = "10px smb";
+            graphics.fillStyle = "white";
+            graphics.fillText("◀", menuButtonX + standardWidth/4, menuButtonY+standardHeight/2.75);
+            graphics.fillText("▶", menuButtonX + standardWidth/1.25 + standardWidth/4, menuButtonY+standardHeight/2.75);
+
+            //Allows alternating between blocks and enemies menu
+            graphics.fillStyle = "green";
+            graphics.fillRect(alternateButtonX, alternateButtonY, alternateButtonWidth, alternateButtonHeight);
+            graphics.fillStyle = "white";
+            graphics.fillText(blocksMenu % 2 ? "Blocks" : "Enemies", alternateButtonX + standardWidth/1.25, alternateButtonY+standardHeight/3);
+
+            //Allows the user to change the terrain of the level
+            graphics.fillStyle = "green";
+            graphics.fillRect(terrainButtonX, terrainButtonY, terrainButtonWidth, terrainButtonHeight);
+            graphics.fillStyle = "white";
+            graphics.fillText(currentLocation.terrain, terrainButtonX + standardWidth, terrainButtonY+standardHeight/3);
+
+            //Allows the user to change the background of the level
+            graphics.fillStyle = "green";
+            graphics.fillRect(backgroundButtonX, backgroundButtonY, backgroundButtonWidth, backgroundButtonHeight);
+            graphics.fillStyle = "white";
+            graphics.fillText(currentBackground, terrainButtonX + standardWidth, backgroundButtonY+standardHeight/3);
+
+            graphics.fillStyle = "green";
+            graphics.fillRect(downloadButtonX, downloadButtonY, downloadButtonWidth, downloadButtonHeight);
+            graphics.fillRect(quitButtonX, quitButtonY, quitButtonWidth, quitButtonHeight);
+            graphics.fillRect(uploadButtonX, uploadButtonY, uploadButtonWidth, uploadButtonHeight);
+
+            graphics.fillStyle = "white";
+            graphics.fillText("Download", downloadButtonX + standardWidth, downloadButtonY+standardHeight/3);
+            graphics.fillText("Background", backgroundButtonX+standardWidth, backgroundButtonY-standardHeight/8);
+            graphics.fillText("Terrain", terrainButtonX+standardWidth, terrainButtonY-standardHeight/8);
+            graphics.fillText("Quit", quitButtonX+standardWidth, quitButtonY+standardHeight/3);
+            graphics.fillText("Upload", uploadButtonX+standardWidth, uploadButtonY+standardHeight/3);
+
+            /*
+            const containsObject = {
+                "q": "coin",
+                "(": "powerup",
+                ")": "1up",
+                "p": "powerup",
+                "1": "1up",
+                "&": "coin",
+                "0": "10 coins",
+                "*": "Star",
+                "r": "PoisonMushroom",
+                "t": "PoisonMushroom",
+                "l": "PoisonMushroom",
+                "2": "Vine",
+                "®": "powerup"
+            }
+
+            const directionObject = {
+                "?": "down",
+                "¿": "up",
+                "@": "cyclic1",
+                "#": "cyclic2",
+                "m": "cyclic2",
+                "3": "drop",
+                "¶": "drop",
+                "§": "down",
+                "œ": "right",
+                "¥": "cyclic1"
+            } */
+
+            //Mario image which decides the starting y position for him
+            graphics.drawImage(mario.img, width-shiftWidth*1.75, standardHeight*2, standardWidth, standardHeight);
+
+            //Actual menu
+            if (blocksMenu%2) {
+                //For the blocks
+                for (let i = 0; i < blocksImages[menuPage].length; i++) {
+                    for (let j = 0; j < blocksImages[menuPage][i].length; j++) {
+                        if (blocksImages[menuPage][i][j].hasImage) {
+                            graphics.drawImage(blocksImages[menuPage][i][j].img, (j+0.25)*standardWidth-shiftWidth, (i+5)*standardHeight, standardWidth/2.5, standardHeight/2.5);
+                        } else {
+                            graphics.strokeStyle = "white";
+                            graphics.strokeRect((j+0.25)*standardWidth-shiftWidth, (i+5)*standardHeight, standardWidth/2.5, standardHeight/2.5);
+                        }
+
+                        if (blocksImages[menuPage][i][j].contains != "10 coins") {
+                            graphics.drawImage(blocksImages[menuPage][i][j].containsImage, (j+0.3)*standardWidth-shiftWidth, (i+5.05)*standardHeight, 12, 12);
+                        } else if (blocksImages[menuPage][i][j].contains == "10 coins") {
+                            graphics.fillText("10", (j+0.45)*standardWidth-shiftWidth, (i+5.25)*standardHeight);
+                        }
+
+                        //const canvas_arrow = (headlen, fromx, fromy, tox, toy)
+
+                        switch (blocksImages[menuPage][i][j].directionObject) {
+                            case "cyclic2":
+                                canvas_arrow(6, j*standardWidth-shiftWidth+10, (i+5)*standardHeight+32, j*standardWidth-shiftWidth+26, (i+5)*standardHeight+32, true);
+                            break;
+
+                            case "drop":
+                                canvas_arrow(6, (j*standardWidth)-84, (i+5)*standardHeight, (j*standardWidth)-84, (i+5.5)*standardHeight, false);
+                                canvas_arrow(6, (j*standardWidth)+4-80, (i+5)*standardHeight, (j*standardWidth)+4-80, (i+5.5)*standardHeight, false);
+                            break;
+                        }
+                    }
+                }
+
+                for (let i = 0; i < blocksImages[menuPage+1].length; i++) {
+                    for (let j = 0; j < blocksImages[menuPage+1][i].length; j++) {
+                        if (blocksImages[menuPage+1][i][j].hasImage) {
+                            graphics.drawImage(blocksImages[menuPage+1][i][j].img, width-shiftWidth*2 + (j+0.25)*standardWidth, (i+5)*standardHeight, standardWidth/2.5, standardHeight/2.5);
+                        }  else {
+                            graphics.strokeStyle = "white";
+                            graphics.strokeRect(width-shiftWidth*2 + (j+0.25)*standardWidth, (i+5)*standardHeight, standardWidth/2.5, standardHeight/2.5);
+                        }
+
+                        if (blocksImages[menuPage+1][i][j].contains != "10 coins") {
+                            graphics.drawImage(blocksImages[menuPage+1][i][j].containsImage, width-shiftWidth*2 + (j+0.3)*standardWidth, (i+5.05)*standardHeight, 12, 12);
+                        }  else if (blocksImages[menuPage+1][i][j].contains == "10 coins") {
+                            graphics.fillText("10", width-shiftWidth*2 + (j+0.45)*standardWidth, (i+5.25)*standardHeight);
+                        }
+
+                        switch (blocksImages[menuPage+1][i][j].directionObject) {
+                            case "cyclic1":
+                                canvas_arrow(6, (width-4*standardWidth)+4+(j*standardWidth), (i+5)*standardHeight, (width-4*standardWidth)+4+(j*standardWidth), (i+5.5)*standardHeight, true);
+                            break;
+
+                            case "cyclic2":
+                                canvas_arrow(6, (width-4*standardWidth)+10+(j*standardWidth), (i+4.875)*standardHeight+32, (width-4*standardWidth)+26+(j*standardWidth), (i+4.875)*standardHeight+32, true);
+                            break;
+
+                            case "down":
+                                canvas_arrow(6, (width-4*standardWidth)+4+(j*standardWidth), (i+5)*standardHeight, (width-4*standardWidth)+4+(j*standardWidth), (i+5.5)*standardHeight, false);
+                            break;
+
+                            case "up":
+                                canvas_arrow(6, (width-4*standardWidth)+4+(j*standardWidth), (i+5.5)*standardHeight, (width-4*standardWidth)+4+(j*standardWidth), (i+5)*standardHeight, false);
+                            break;
+
+                            case "drop":
+                                canvas_arrow(6, (width-4*standardWidth)-4+(j*standardWidth), (i+5)*standardHeight, (width-4*standardWidth)-4+(j*standardWidth), (i+5.5)*standardHeight, false);
+                                canvas_arrow(6, (width-4*standardWidth)+4+(j*standardWidth), (i+5)*standardHeight, (width-4*standardWidth)+4+(j*standardWidth), (i+5.5)*standardHeight, false);
+                            break;
+
+                            case "right":
+                                canvas_arrow(6, (width-4*standardWidth)+10+(j*standardWidth), (i+4.875)*standardHeight+32, (width-4*standardWidth)+26+(j*standardWidth), (i+4.875)*standardHeight+32, false);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                //For the enemies
+
+                for (let i = 0; i < enemyImages.length; i++) {
+                    for (let j = 0; j < enemyImages[i].length; j++) {
+                        graphics.drawImage(enemyImages[i][j].img, enemyImages[i].length == 2 ? (j+0.25)*standardWidth-shiftWidth : (j+.5)*standardWidth-shiftWidth, (i+3)*standardHeight);
+
+                        if (["F", "P"].includes(enemyImages[i][j].letter)) {
+                            //const canvas_arrow = (headlen, fromx, fromy, tox, toy)
+
+                            enemyImages[i][j].letter == "F" ? canvas_arrow(6, j*standardWidth-shiftWidth+10, (i+3)*standardHeight+32, j*standardWidth-shiftWidth+26, (i+3)*standardHeight+32, true) : canvas_arrow(8, j*standardWidth-shiftWidth, (i+3)*standardHeight+4, j*standardWidth-shiftWidth, (i+3)*standardHeight+24, true);
+                        }
+                    }
+                }
+            }
+
+
+            if (imageSelected.img.src.indexOf(".png") > -1) {
+                graphics.drawImage(imageSelected.img, mouseX, mouseY, imageSelected.width, imageSelected.height);
+            } else if (imageSelected.img.src.indexOf("Mario") > -1) {
+                graphics.strokeStyle = "blue";
+                graphics.strokeRect(mouseX, mouseY, standardWidth, standardHeight);
+            }
+
+            if (imageSelected.img.src != mario.img.src) {
+                if (imageSelected.containsImage.src && imageSelected.contains != "10 coins") {
+                    graphics.drawImage(imageSelected.containsImage, mouseX+5, mouseY+5, 30, 30);
+                } else if (imageSelected.contains == "10 coins" && (imageSelected.letter.charCodeAt(0) < 65 || imageSelected.letter.charCodeAt(0) > 90)) {
+                    graphics.font = "20px smb";
+                    graphics.fillText("10", mouseX+20, mouseY+25);
+                }
+            }
+
+            //blockObject
+            //enemyObject
+
+            for (let i = 0; i < currentLocation.area.length; i++) {
+                for (let j = 0; j < currentLocation.area[i].length; j++) {
+                    const letter = currentLocation.area[i][j];
+
+                    if (letter != "") {
+                        if (letter in blockObject) {
+                            let block;
+
+                            for (let k = 0; k < blocksImages.length; k++) {
+                                for (let l = 0; l < blocksImages[k].length; l++) {
+                                    for (let m = 0; m < blocksImages[k][l].length; m++) {
+                                        if (letter == blocksImages[k][l][m].letter) {
+                                            block = blocksImages[k][l][m];
+                                        }
+                                    }
+                                }
+                            }
+
+                            let xPos = j-levelOffset;
+
+                            if (xPos >= 0 && xPos <= 15) {
+                                graphics.drawImage(block.img, xPos * standardWidth, i * standardHeight, block.width, block.height);
+
+                                if (block.img.src.indexOf(".png") > -1) {
+                                    graphics.drawImage(block.img, xPos * standardWidth, i * standardHeight, block.width, block.height);
+                                } else if (block.letter != " ") {
+                                    graphics.strokeStyle = "red";
+                                    graphics.lineWidth = 5;
+                                    graphics.strokeRect(xPos * standardWidth, i * standardHeight, standardWidth, standardHeight);
+                                    graphics.lineWidth = 1;
+                                }
+
+                                if (block.contains) {
+                                    graphics.drawImage(block.containsImage, xPos*standardWidth+5, i*standardHeight+5, 30, 30);
+                                }
+
+                                if (block.contains == "10 coins") {
+                                    graphics.font = "20px smb";
+                                    graphics.fillText("10", xPos*standardWidth+20, i*standardHeight+25);
+                                }
+                            }
+                        } else if (letter in enemyObject) {
+                            let enemy;
+
+                            for (let k = 0; k < enemyImages.length; k++) {
+                                for (let l = 0; l < enemyImages[k].length; l++) {
+                                    if (letter == enemyImages[k][l].letter) {
+                                        enemy = enemyImages[k][l];
+                                    }
+                                }
+                            }
+
+                            let offset = 0;
+
+                            if (enemy.height % 40 == 20) {
+                                offset = 20;
+                            }
+
+                            let xPos = j-levelOffset;
+
+                            if (xPos >= 0 && xPos <= 15) {
+                                graphics.drawImage(enemy.img, xPos * standardWidth, i * standardHeight-offset, enemy.width, enemy.height);
+                            }
+                        }
+                    }
+                }
+            }
+        } 
+
         if (canGoToNextLevel && !(world == 8 && stage == 4 && game == "smb") && !(world == "D" && stage == 4 && game == "smbtll")) {
-            nextLevel();
+            if (game == "smm") {
+                state = "title screen";
+
+                quit = true;
+            } else {
+                nextLevel();
+            }
         }
     }
 
@@ -3141,7 +4164,7 @@ const gameEngine = () => {
                     if (time%challengeSlider.value == 0) {
                         const array = ["G", "K", "B", "Q", "W", "E", "L", "P", "F", "I", "H", "R", "D", "T", "U", "A", "S"];
 
-                        currentLocation.enemies.push(new Enemy(random(0, newWidth-80), -100, 40, 40, array[random(0, array.length-1)], gravity, sounds, currentLocation.terrain, null));
+                        currentLocation.enemies.push(new Enemy(random(0, newWidth-80), -100, standardWidth, standardHeight, array[random(0, array.length-1)], gravity, sounds, currentLocation.terrain, null));
                     }
                 break;
 
@@ -3151,7 +4174,7 @@ const gameEngine = () => {
                     canUse = true;
 
                     if (time%challengeSlider.value == 0) {
-                        powerups.push(new Powerup(random(0, newWidth-40), -80, "PoisonMushroom", gravity, music, sounds, currentLocation.terrain));
+                        powerups.push(new Powerup(random(0, newWidth-standardWidth), -80, "PoisonMushroom", gravity, music, sounds, currentLocation.terrain));
                     }
                 break;
 
@@ -3494,8 +4517,8 @@ const gameEngine = () => {
                     if (!mario.isBig || !mario.hasFireFlower) {
                         mario.isBig = true;
                         mario.hasFireFlower = true;
-                        mario.drawnY -= 40;
-                        mario.lastGroundY -= 40;
+                        mario.drawnY -= standardHeight;
+                        mario.lastGroundY -= standardHeight;
                     }
                 break;
 
