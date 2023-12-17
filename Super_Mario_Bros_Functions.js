@@ -1072,7 +1072,7 @@ function Block(type, constantX, constantY, drawnX, drawnY, width, height, sounds
 		"l": "PoisonMushroom",
 		"2": "Vine",
 		"®": "powerup"
-	}
+	};
 
 	const directionObject = {
 		"?": "down",
@@ -1081,12 +1081,13 @@ function Block(type, constantX, constantY, drawnX, drawnY, width, height, sounds
 		"#": "cyclic2",
 		"m": "cyclic2",
 		"3": "drop",
+		"o": "drop",
 		"¶": "drop",
 		"6": "pulley",
 		"§": "down",
 		"œ": "right",
 		"¥": "cyclic1"
-	}
+	};
 
 	const noCollisions = [" ", "f", "1", "&", "c", ".", ",", "a", "u", "i", ";", ":", "4", "5", "z", "x", "~", "!", "k", "a", "£", "¢", "7", "8", "9", ">"];
 
@@ -1835,7 +1836,7 @@ Block.prototype = {
 				graphics.drawImage(flag, Math.round(this.drawnX-22), this.drawnY+this.offsetY+39, 40, 40);
 			} else if (this.type == "Castle" || this.type == "BigCastle") {
 				let castleFlag = new Image();
-				castleFlag.src = `${pathname}/images/CastleFlag.png`;
+				castleFlag.src = `${pathname}/images/castleFlag.png`;
 				graphics.drawImage(castleFlag, Math.round(this.drawnX+this.width/2-20), this.drawnY+this.offsetY+40, 40, 40);
 			} else if (this.directionMoving == "pulley" && !this.freeFall) {
 				let pulley = new Image();
@@ -2966,7 +2967,7 @@ Powerup.prototype = {
 			&& object.hitboxY < this.hitboxY+this.hitboxHeight) {
 			powerups.splice(powerups.indexOf(this), 1);
 
-			if (this.type != "PoisonMushroom" && object.invincibility <= 0) {
+			if (this.type != "PoisonMushroom") {
 				object.addScore(1000, this.drawnX, this.drawnY);
 			}
 
@@ -2984,7 +2985,7 @@ Powerup.prototype = {
 					object.lastGroundY -= object.height;
 					object.drawnY -= object.height;
 				}
-			} else if (this.type == "PoisonMushroom") {
+			} else if (this.type == "PoisonMushroom" && object.invincibility <= 0) {
 				object.hit()
 			} else if (this.type.indexOf("FireFlower") > -1 && !object.hasFireFlower) {
 				object.timeUntilNoTransition = 50;
