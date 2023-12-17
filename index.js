@@ -16,7 +16,7 @@ make code better/cleaner and optimize graphics, add code for lost levels/smb3/sm
 /animations, /score, /timer, /world, /music
 /no backwards scrolling
 /How to Play button
-organize code and add commnets
+/organize code and add commnets
 /Title screen
 /Make 1-2, 1-3, 1-4, and 8-4
 
@@ -67,6 +67,9 @@ const challengeSelect = document.getElementById("challengeSelect");
 const challengeSlider = document.getElementById("challengeSlider");
 const canUseChallengeSlider = document.getElementById("canUseChallengeSlider");
 
+//Allows the player to upload levels
+const uploadLevelInput = document.getElementById("uploadLevelInput");
+
 //Music that plays when paused that is supposed to be secret
 const pauseMusic = [new Audio("mainSounds/FileSelect.mp3"), new Audio("mainSounds/PiranhaLullaby.mp3"), new Audio("mainSounds/YoshiFindsMario.mp3"), new Audio("mainSounds/MusicBox.mp3"), new Audio("mainSounds/EndingMusic.mp3")];
 
@@ -78,7 +81,7 @@ let newWidth = width;
 //Determines which game is currently running (smb, smbll smb2, smb3, smw, nsmbds, nsmbwii, smm...)
 let game = null;
 //current pathname of the url
-let pathname;
+let pathname = `file://${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}`;
 //If the game has ended then the code will reset back to the game selection screen
 let gameEnded = false;
 
@@ -246,15 +249,17 @@ window.onload = function() {
 
     const gameSelectMusic = new Audio("mainSounds/gameSelect.wav");
     sounds.push(gameSelectMusic);
-    let coverImages = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
+    let coverImages = [new Image(), new Image(), new Image()];
     coverImages[0].src = "mainImages/superMarioBrosCover.png";
     coverImages[1].src = "mainImages/superMarioBrosTheLostLevelsCover.png";
+    coverImages[2].src = "mainImages/superMarioMakerCover.jpeg";
     //Determines which game is selected on the game select screen
     let gameSelected = 0;
-    let gamesText = ["Super Mario Bros.", "Super Mario Bros.: The Lost Levels"];
+    let gamesText = ["Super Mario Bros.", "Super Mario Bros.: The Lost Levels", "Super Mario Maker"];
     let gamesObject = {
         0: "smb",
         1: "smbtll",
+        2: "smm"
     }
 
     gameSelectScreen = () => {
@@ -295,6 +300,7 @@ window.onload = function() {
             gameSelectMusic.currentTime = 0;
             gameSelectMusic.pause();
             cancelAnimationFrame(frameId);
+
             gameEngine();
         }
     }
