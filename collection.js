@@ -1,41 +1,16 @@
 "use strict";
 function Game() {
-	//this.type = type;
-	pathname = `games/${game}`;
-	/*this.state = "title screen";
-	this.timeUntilPlay = 150;
-	this.canUpdate = true;
-	this.time = 0;
-	this.score = 0;
-	this.gameTime = 400;
-	this.paused = false;
-	this.gravity = 1;
-	this.powerups = [];
-	this.fireballs = [];
-	this.timeUntilNextFireball = 0;
-	this.fireballsThrown = 0;
-	this.flames = [];
-	this.timeUntilNextFlame = 0;
-	this.movingScreen = false;
-	this.isStanding = true;
-	this.isHittingBottom = false;
-	this.isHittingLeft = false;
-	this.isHittingRight = false;
-	this.canGoToNextLevel = false;
-	this.timeUntilNextFish = 0;
-	this.coinAnimationList = [];
-	this.music = new Audio();
-	this.sounds = [];
-	this.world = 1;
-	this.stage = 2;
-	this.level = `${this.world}-${this.stage}`;
-	this.debris = [];
-	this.fireworks = [];
-	this.backgroundList = [];*/
-	this.backgroundList = [];
-	this.gravity = 1;
-	this.timeUntilNextFish = 0;
+	//Pathname to get all sounds, music, images, etc.
+	pathname = `file://${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}/games/${game}`;
+	//pathname = `http://localhost:8080/games/${game}`;
 
+	//The background list depends on the game and is the stuff like the clouds, hills, etc.
+	this.backgroundList = [];
+
+	//The set gravity for all things affected by gravity
+	this.gravity = 1;
+
+	//Initialization function
 	this.init();
 }
 
@@ -43,24 +18,23 @@ Game.prototype = {
 	constructor: Game,
 
 	init: function() {
-		if (game == "smb" || game == "smbtll") {
-			this.hudCoin = new Image();
-	    	this.xImage = new Image();
-	    	this.xImage.src = `${pathname}/images/xImage.png`;
-	    	this.hudTitle = new Image();
-	    	this.hudTitle.src = `${pathname}/images/${game}Title.png`;
+		//This basically sets up the hud sprites and the music and sounds for super mario bros and the lost levels
+		this.hudCoin = new Image();
+    	this.xImage = new Image();
+	    this.xImage.src = `${pathname}/images/xImage.png`;
+	   	this.hudTitle = new Image();
+	    this.hudTitle.src = `${pathname}/images/${game}Title.png`;
 
-	    	this.cursor = new Image();
-	    	this.cursor.src = `${pathname}/images/cursor.png`;
+	   	this.cursor = new Image();
+	   	this.cursor.src = `${pathname}/images/cursor.png`;
 
-	    	this.music = new Audio(`${pathname}/sounds/Overworld.wav`);
-	    	this.sounds = [new Audio(`${pathname}/sounds/1up.wav`), new Audio(`${pathname}/sounds/brickBump.wav`), new Audio(`${pathname}/sounds/brickSmash.wav`), 
-	        new Audio(`${pathname}/sounds/coin.wav`), new Audio(`${pathname}/sounds/fireball.wav`), new Audio(`${pathname}/sounds/kickShell.wav`), 
-	        new Audio(`${pathname}/sounds/paused.wav`), new Audio(`${pathname}/sounds/smallJump.wav`), new Audio(`${pathname}/sounds/stompEnemy.wav`), 
-	        new Audio(`${pathname}/sounds/fireworks.wav`), new Audio(`${pathname}/sounds/bigJump.wav`), new Audio(`${pathname}/sounds/fireworks.wav`), 
-	        new Audio(`${pathname}/sounds/bowserFalls.wav`), new Audio(`${pathname}/sounds/bowserFire.wav`), new Audio(`${pathname}/sounds/enterPipe.wav`), 
-	        new Audio(`${pathname}/sounds/getPowerup.wav`), new Audio(`${pathname}/sounds/powerupAppears.wav`), new Audio(`${pathname}/sounds/smallJump.wav`)];
-		}
+	    this.music = new Audio(`${pathname}/sounds/Overworld.wav`);
+	   	this.sounds = [new Audio(`${pathname}/sounds/1up.wav`), new Audio(`${pathname}/sounds/brickBump.wav`), new Audio(`${pathname}/sounds/brickSmash.wav`), 
+	    new Audio(`${pathname}/sounds/coin.wav`), new Audio(`${pathname}/sounds/fireball.wav`), new Audio(`${pathname}/sounds/kickShell.wav`), 
+	    new Audio(`${pathname}/sounds/paused.wav`), new Audio(`${pathname}/sounds/smallJump.wav`), new Audio(`${pathname}/sounds/stompEnemy.wav`), 
+	    new Audio(`${pathname}/sounds/fireworks.wav`), new Audio(`${pathname}/sounds/bigJump.wav`), new Audio(`${pathname}/sounds/fireworks.wav`), 
+	    new Audio(`${pathname}/sounds/bowserFalls.wav`), new Audio(`${pathname}/sounds/bowserFire.wav`), new Audio(`${pathname}/sounds/enterPipe.wav`), 
+	    new Audio(`${pathname}/sounds/getPowerup.wav`), new Audio(`${pathname}/sounds/powerupAppears.wav`), new Audio(`${pathname}/sounds/smallJump.wav`)];
 
 		switch (game) {
 			case "smb":
@@ -73,6 +47,7 @@ Game.prototype = {
 			    //world 8 overworld background (end background)
 			    this.backgroundList[2] = new Background(`${pathname}/images/EndBackground.png`, 0, 80, 1920, 440);
 
+			    //Every level data looks like this
 				this.level1_1Overworld = [
 			        [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
 			        [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -109,6 +84,7 @@ Game.prototype = {
 			        ["g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g"],
 			    ];
 
+				//after initializing the level design this code puts it into a function that sets everything as it's supposed to be
 			    this.level1_1Overworld = new Area(this.level1_1Overworld, "Overworld", true, "#9391ff", this.sounds, this.backgroundList[0]);
 			    this.level1_1Bonus = new Area(this.level1_1Bonus, "Bonus", false, "black", this.sounds);
 			    this.level1_1 = new Level([this.level1_1Overworld, this.level1_1Bonus]);
@@ -378,6 +354,7 @@ Game.prototype = {
 			    this.level8_4.areas[0].area[11][266].pair = this.level8_4.areas[0].area[11][19];
 			    this.level8_4.areas[0].area[11][267].pair = this.level8_4.areas[0].area[11][19];
 
+			    //All the super mario bros levels
 			    this.levels = {
 			        "1-1": this.level1_1,
 			        "1-2": this.level1_2,
@@ -1228,6 +1205,7 @@ Game.prototype = {
 				this.levelD_4.areas[0].area[9][103].pair = this.levelD_4.areas[0].area[11][3];
 				this.levelD_4.areas[0].area[9][104].pair = this.levelD_4.areas[0].area[11][3];
 
+				//If the level has a pulley in it, then this code will find the pair
 				for (let k = 0; k < areas.length; k++) {
 					let area = areas[k];
 
@@ -1257,6 +1235,7 @@ Game.prototype = {
 					}
 				}
 
+				//All the super mario bros lost levels levels
 			    this.levels = {
 			        "1-1": this.level1_1,
 			        "1-2": this.level1_2,
@@ -1277,11 +1256,68 @@ Game.prototype = {
 			        "D-4": this.levelD_4
 			    };
 
+			    //This is what the user will play as
 			    this.mario = new Player(3, this.gravity, this.music, this.sounds, 0);
 				break;
 
-			case "smb2":
+			case "smm":
+				//Super Mario Maker: A mode that allows the player to create, download, and upload levels that can be played in the engine
+				//Overworld background
+			    this.backgroundList[0] = new Background(`${pathname}/images/OverworldBackground.png`, 0, 80, 1920, 440);
 
+			    //Athletic background
+			    this.backgroundList[1] = new Background(`${pathname}/images/AthleticBackground.png`, 0, 80, 1920, 440);
+
+			    //world 8 overworld background (end background)
+			    this.backgroundList[2] = new Background(`${pathname}/images/EndBackground.png`, 0, 80, 1920, 440);
+
+			    //smtll backgrounds
+			    this.backgroundList[3] = new Background(`${pathname}/images/Overworld1Background.png`, 0, 80, 1920, 440);
+
+			    //Athletic background
+			    this.backgroundList[4] = new Background(`${pathname}/images/Athletic1Background.png`, 0, 80, 1920, 440);
+
+			    //Hill Background
+			    this.backgroundList[5] = new Background(`${pathname}/images/HillBackground.png`, 0, 80, 1920, 440);
+
+			    //Snow Background
+			    this.backgroundList[6] = new Background(`${pathname}/images/SnowHillBackground.png`, 0, 80, 1920, 440);
+
+			    //Snow overworld background
+			    this.backgroundList[7] = new Background(`${pathname}/images/SnowOverworldBackground.png`, 0, 80, 1920, 440);
+
+			    //Mushroom overworld background
+			    this.backgroundList[8] = new Background(`${pathname}/images/MushroomHillBackground.png`, 0, 80, 1920, 440);
+
+			    //Underwater Hill background
+			    this.backgroundList[9] = new Background(`${pathname}/images/UnderwaterHillBackground.png`, 0, 80, 1920, 440);
+
+			    this.levelMap = [
+			    	[" "," "," "," "," "," ","e","s","s","s","s"," "," "," "," "," "," "," "," "],
+					[" "," "," "," "," ","p","w","s","s","s","s","s","s","$"," "," "," "," "," "],
+					[" "," "," "," "," ","b","b","b","c","c","b","c"," "," "," "," "," "," "," "],
+					[" "," "," "," ","b","c","b","c","c","c","b","c","c","c"," "," "," "," "," "],
+					[" "," "," "," ","b","c","b","b","c","c","c","b","c","c","c"," "," "," "," "],
+					[" "," "," "," ","b","b","c","c","c","c","b","b","b","b"," "," "," "," "," "],
+					[" "," "," "," "," "," ","c","c","c","c","c","c","c"," "," "," "," "," "," "],
+					[" "," "," "," "," ","b","b","s","b","b","b"," "," "," "," "," "," "," "," "],
+					[" "," "," "," ","$","b","b","s","b","b","s","{","}","b"," "," "," "," "," "],
+					[" "," "," ","$","b","b","b","s","s","s","s","/","|","b","$"," "," "," "," "],
+					[" "," "," ","p","p","b","s","p","s","s","p","s","b","p","p"," "," "," "," "],
+					[" "," "," ","p","p","p","s","s","s","s","s","s","p","p","p"," "," "," "," "],
+					[" "," "," ","p","p","s","s","s","s","s","s","s","s","p","p"," "," "," "," "],
+					[" "," "," "," "," ","s","s","s"," "," ","s","s","s"," "," "," "," "," "," "],
+					[" "," "," "," ","b","b","b"," "," "," "," ","b","b","b"," "," "," "," "," "]
+				];
+
+				this.level1_1Area = new Area(this.levelMap, "Overworld", true, "#9391ff", this.sounds)
+				this.level1_1 = new Level([this.level1_1Area]);
+
+				this.levels = {
+					"1-1": this.level1_1
+				}
+
+				this.mario = new Player(3, this.gravity, this.music, this.sounds, 0);
 				break;
 		}
 
@@ -1291,8 +1327,10 @@ Game.prototype = {
 	setup: function() {
 		shiftWidth = 80;
 		newWidth = width-shiftWidth*2;
+		//Allows for the more retro look
         graphics.setTransform(1, 0, 0, 1, shiftWidth, 0);
 
+        //It basically checks for which blocks are edges so there are no unnesecary collisions that can cause clipping
         if (this.levels != undefined) {
 	        for (let [key, level] of Object.entries(this.levels)) {
 	            level.areas.forEach((area) => {
@@ -1323,6 +1361,7 @@ Game.prototype = {
     	}
 	},
 
+	//What actually allows the audio to work
 	playAudio: function(terrain) {
 		//Volume control
         this.music.volume = volume.value/100;
