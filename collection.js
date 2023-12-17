@@ -1,7 +1,7 @@
 "use strict";
 function Game() {
 	//Pathname to get all sounds, music, images, etc.
-	pathname = `file://${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}/games/${game}`;
+	pathname = `${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}/games/${game}`;
 	//pathname = `http://localhost:8080/games/${game}`;
 
 	//The background list depends on the game and is the stuff like the clouds, hills, etc.
