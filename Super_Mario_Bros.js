@@ -438,7 +438,6 @@ const gameEngine = () => {
                     shift++;
                 } else if (key.keyCode == 13 && shift%2 == 1 && !key.repeat) {
                     quit = true;
-                    uploadLevelInput.value = "";
                 }
             }
 
@@ -450,7 +449,7 @@ const gameEngine = () => {
 
                     pauseMusic[rand].currentTime = 0;
                     
-                    setTimeout(() => pauseMusic[rand].play(), 2000);
+                    setTimeout(() => pauseMusic[rand].play(), 5000);
 
                     music.pause();
 
@@ -459,6 +458,7 @@ const gameEngine = () => {
                     }
                 } else {
                     for (let i = 0; i < pauseMusic.length; i++) {
+                        pauseMuisc[i].currentTime = 0;
                         pauseMusic[i].pause();
                     }
 
@@ -4549,10 +4549,27 @@ const gameEngine = () => {
         }
 
         if (quit) {
-            cancelAnimationFrame(frameId);
             gameEnded = true;
             codeUsed = false;
             randomized = false;
+
+            music.currentTime = 0;
+            music.pause();
+
+            for (let i = 0; i < sounds.length; i++) {
+                sounds[i].currentTime = 0;
+                sounds[i].pause();
+            }
+
+            for (let i = 0; i < pauseMusic.length; i++) {
+                pauseMusic[i].currentTime = 0;
+                pauseMusic[i].pause();
+            }
+
+            uploadLevelInput.value = "";
+            
+            cancelAnimationFrame(frameId);
+
             return;
         }
     }
