@@ -331,6 +331,20 @@ window.onload = function() {
         }
     }
 
+    const adjustVolume = () => {
+        for (let i = 0; i < sounds.length; i++) {
+            sounds[i].volume = volume.value/100;
+        }
+
+        for (let i = 0; i < sounds.length; i++) {
+            sounds[i].volume = volume.value/100;
+        }
+
+        startupSound.volume = volume.value/100;
+    }
+
+    setInterval(adjustVolume, 10);
+
     for (let i = 0; i < sounds.length; i++) {
         sounds[i].volume = volume.value/100;
     }
