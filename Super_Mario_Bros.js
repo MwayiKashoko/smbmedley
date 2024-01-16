@@ -1738,7 +1738,6 @@ const gameEngine = () => {
             mario.draw();
 
             if (music.src != `${pathname}/sounds/titleScreen.wav`) {
-                music.pause();
                 music.src = `${pathname}/sounds/titleScreen.wav`;
             }
 
