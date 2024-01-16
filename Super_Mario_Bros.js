@@ -458,7 +458,7 @@ const gameEngine = () => {
                     }
                 } else {
                     for (let i = 0; i < pauseMusic.length; i++) {
-                        pauseMuisc[i].currentTime = 0;
+                        pauseMusic[i].currentTime = 0;
                         pauseMusic[i].pause();
                     }
 
@@ -2915,7 +2915,7 @@ const gameEngine = () => {
         }
 
         if (!paused && (state == "game" || state == "title screen")) {
-            currentGame.playAudio(currentLocation.terrain);
+            currentGame.playAudio(currentLocation.terrain, gameTime);
         }
 
         let frameId = requestAnimationFrame(update);
