@@ -4585,6 +4585,8 @@ const gameEngine = () => {
             music.src = `${pathname}/sounds/hurryUp.wav`;
         }
 
+        console.log(`${pathname}/sounds/hurryUp.wav`, music.src);
+
         if (!paused && gameTime > 0 && mario.transition == false && !mario.clearedLevel && state == "game") {
             gameTime--;
         }
