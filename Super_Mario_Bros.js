@@ -1737,12 +1737,10 @@ const gameEngine = () => {
             timeUntilPlay = 150;
             mario.draw();
 
-            if (music.src != `${pathname}/sounds/titleScreen.wav`) {
+            if (music.src.indexOf(`${pathname}/sounds/titleScreen.wav`) == -1) {
                 music.pause();
                 music.src = `${pathname}/sounds/titleScreen.wav`;
             }
-
-            console.log(`${pathname}/sounds/titleScreen.wav`, music.src);
 
             currentLocation.area.forEach((row) => {
                 row.forEach((block, i, arr) => {
@@ -4583,7 +4581,7 @@ const gameEngine = () => {
             mario.die();   
         }
 
-        if (gameTime == 100 && music.src != `${pathname}/sounds/hurryUp.wav` && music.src != `${pathname}/sounds/savePrincess.wav`) {
+        if (gameTime == 100 && music.src.indexOf(`${pathname}/sounds/hurryUp.wav`) == -1 && music.src.indexOf(`${pathname}/sounds/savePrincess.wav`) == -1) {
             music.src = `${pathname}/sounds/hurryUp.wav`;
         }
 
