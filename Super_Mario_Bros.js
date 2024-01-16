@@ -1738,8 +1738,11 @@ const gameEngine = () => {
             mario.draw();
 
             if (music.src != `${pathname}/sounds/titleScreen.wav`) {
+                music.pause();
                 music.src = `${pathname}/sounds/titleScreen.wav`;
             }
+
+            console.log(`${pathname}/sounds/titleScreen.wav`, music.src);
 
             currentLocation.area.forEach((row) => {
                 row.forEach((block, i, arr) => {
