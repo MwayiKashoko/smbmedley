@@ -1362,7 +1362,7 @@ Game.prototype = {
 	},
 
 	//What actually allows the audio to work
-	playAudio: function(terrain) {
+	playAudio: function(terrain, gameTime) {
 		//Volume control
         this.music.volume = volume.value/100;
 
@@ -1395,7 +1395,7 @@ Game.prototype = {
             }
         }
 
-        if (this.gameTime < 100 && canSpeedUp && !this.mario.clearedLevel) {
+        if (gameTime < 100 && canSpeedUp && !this.mario.clearedLevel) {
             this.music.playbackRate = 1.5;
         } else {
             this.music.playBackRate = 1;
