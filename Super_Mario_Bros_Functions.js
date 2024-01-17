@@ -126,7 +126,7 @@ Player.prototype = {
 							reset();
 						} 
 
-						if (this.music.src != `${pathname}/sounds/gameOver.wav` && this.lives == 0) {
+						if (this.music.src.indexOf(`${pathname}/sounds/gameOver.wav`) == -1 && this.lives == 0) {
 							this.music.src = `${pathname}/sounds/gameOver.wav`;
 							this.music.play();
 							reset();
@@ -359,7 +359,7 @@ Player.prototype = {
 				this.invincibility--;
 			}
 		} else if (this.transition == "cleared level") {
-			if (this.music.src != `${pathname}/sounds/downFlagpole.wav` && this.isMovingOnPole) {
+			if (this.music.src.indexOf(`${pathname}/sounds/downFlagpole.wav`) == -1 && this.isMovingOnPole) {
 				this.music.src = `${pathname}/sounds/downFlagpole.wav`;
 				this.music.play();
 			}
@@ -373,7 +373,7 @@ Player.prototype = {
 				if (this.drawnY+this.height < 480) {
 					this.drawnY += 5;
 				} else {
-					if (this.music.src != `${pathname}/sounds/levelClear.wav` && !this.isMovingOnPole) {
+					if (this.music.src.indexOf(`${pathname}/sounds/levelClear.wav`) == -1 && !this.isMovingOnPole) {
 						this.drawnY = 480-this.height;
 						this.music.src = `${pathname}/sounds/levelClear.wav`;
 						this.music.play();
