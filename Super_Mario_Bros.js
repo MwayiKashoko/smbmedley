@@ -882,33 +882,33 @@ const gameEngine = () => {
         }
 
         if (game == "smb" || game == "smbtll") {
-            if (music.src == `${pathname}/sounds/BowsersCastle.wav` && music.currentTime/music.duration > 0.985){
+            if (music.src.indexOf(`${pathname}/sounds/BowsersCastle.wav`) > -1 && music.currentTime/music.duration > 0.985){
                 music.currentTime = 0;
                 music.play();
-            } else if (music.src == `${pathname}/sounds/invincible.wav` && music.currentTime/music.duration > 0.987) {
+            } else if (music.src.indexOf(`${pathname}/sounds/invincible.wav`) > -1 && music.currentTime/music.duration > 0.987) {
                 music.currentTime = 0;
                 music.play();
-            } else if (music.src == `${pathname}/sounds/Overworld.wav` && music.currentTime/music.duration > .999) {
+            } else if (music.src.indexOf(`${pathname}/sounds/Overworld.wav`) > -1 && music.currentTime/music.duration > .999) {
                 //Nothing needs to happen it is already a perfect loop?
                 music.play();
-            } else if (music.src == `${pathname}/sounds/savePrincess.wav` && music.currentTime/music.duration > .4725) {
+            } else if (music.src.indexOf(`${pathname}/sounds/savePrincess.wav`) > -1 && music.currentTime/music.duration > .4725) {
                 music.currentTime = 0;
                 music.play();
-            } else if (music.src == `${pathname}/sounds/Underground.wav` && music.currentTime/music.duration > .99) {
+            } else if (music.src.indexOf(`${pathname}/sounds/Underground.wav`) > -1 && music.currentTime/music.duration > .99) {
                 music.currentTime = 0;
                 music.play();
-            } else if (music.src == `${pathname}/sounds/Underwater.wav` && music.currentTime/music.duration > .999) {
+            } else if (music.src.indexOf(`${pathname}/sounds/Underwater.wav`) > -1 && music.currentTime/music.duration > .999) {
                 music.currentTime = 0;
                 music.play();
-            } else if (music.src == `${pathname}/sounds/Bonus.wav` && music.currentTime/music.duration > .997) {
+            } else if (music.src.indexOf(`${pathname}/sounds/Bonus.wav`) > -1 && music.currentTime/music.duration > .997) {
                 music.currentTime = 2;
                 music.play();
-            } else if (music.src == `${pathname}/sounds/titleScreen.wav` && music.currentTime/music.duration > .979) {
+            } else if (music.src.indexOf(`${pathname}/sounds/titleScreen.wav`) > -1 && music.currentTime/music.duration > .979) {
                 music.currentTime = 0;
                 music.play();
             }
         }
-
+        
         //currentGame.musicLoop();
     }
 
@@ -1738,7 +1738,6 @@ const gameEngine = () => {
             mario.draw();
 
             if (music.src.indexOf(`${pathname}/sounds/titleScreen.wav`) == -1) {
-                music.pause();
                 music.src = `${pathname}/sounds/titleScreen.wav`;
             }
 
