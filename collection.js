@@ -1370,19 +1370,19 @@ Game.prototype = {
 	            this.sounds[i].volume = volume.value/100;
 	        }
 	
-	        //Can you actually play the music again if stopped?
-	        const canPlayMusic = this.music.src != `${pathname}/sounds/Overworld.wav` && this.music.src != `${pathname}/sounds/Bonus.wav` && 
-	        this.music.src != `${pathname}/sounds/Underground.wav` && this.music.src != `${pathname}/sounds/invincible.wav` && 
-	        this.music.src != `${pathname}/sounds/Underwater.wav` && this.music.src != `${pathname}/sounds/death.wav` && 
-	        this.music.src != `${pathname}/sounds/levelClear.wav` && this.music.src != `${pathname}/sounds/castleClear.wav` && 
-	        this.music.src != `${pathname}/sounds/downFlagpole.wav` && this.music.src != `${pathname}/sounds/hurryUp.wav` &&
-	        this.music.src != `${pathname}/sounds/gameOver.wav` && this.music.src != `${pathname}/sounds/overworldToUnderground.wav`;
+	       	//Can you actually play the music again if stopped?
+		const canPlayMusic = this.music.src.indexOf(`${pathname}/sounds/Overworld.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/Bonus.wav`) == -1 && 
+	        this.music.src.indexOf(`${pathname}/sounds/Underground.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/invincible.wav`) == -1 && 
+	        this.music.src.indexOf( != `${pathname}/sounds/Underwater.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/death.wav`) == -1 && 
+	        this.music.src.indexOf(`${pathname}/sounds/levelClear.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/castleClear.wav`) == -1 && 
+	        this.music.src.indexOf(`${pathname}/sounds/downFlagpole.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/hurryUp.wav`) == -1 &&
+	        this.music.src.indexOf(`${pathname}/sounds/gameOver.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/overworldToUnderground.wav`) == -1;
 	
 	        //Condition to determine whether we can speed up the music or not
-	        const canSpeedUp = this.music.src != `${pathname}/sounds/death.wav` && 
-	        this.music.src != `${pathname}/sounds/levelClear.wav` && this.music.src != `${pathname}/sounds/downFlagpole.wav` && 
-	        this.music.src != `${pathname}/sounds/hurryUp.wav` && this.music.src != `${pathname}/sounds/gameOver.wav` &&
-	        this.music.src != `${pathname}/sounds/levelClear.wav`;
+	        const canSpeedUp = this.music.src.indexOf(`${pathname}/sounds/death.wav`) == -1 && 
+	        this.music.src.indexOf(`${pathname}/sounds/levelClear.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/downFlagpole.wav`) == -1 && 
+	        this.music.src.indexOf(`${pathname}/sounds/hurryUp.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/gameOver.wav`) == -1 &&
+	        this.music.src.indexOf(`${pathname}/sounds/levelClear.wav`) == -1;
 	        
 	        if (canPlayMusic || this.music.currentTime == 0) {
 	            this.music.play();
@@ -1390,7 +1390,7 @@ Game.prototype = {
 	
 	        //This will stop the death and hurry up sounds from playing
 	        if (this.music.currentTime == this.music.duration) {
-	            if (this.music.src == `${pathname}/sounds/death.wav` || this.music.src == `${pathname}/sounds/hurryUp.wav`) {
+	            if (this.music.src.indexOf(`${pathname}/sounds/death.wav`) > -1 || this.music.src.indexOf(`${pathname}/sounds/hurryUp.wav`) > -1) {
 	                this.music.src = `${pathname}/sounds/${terrain}.wav`;
 	            }
 	        }
