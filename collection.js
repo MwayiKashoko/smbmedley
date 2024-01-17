@@ -1373,7 +1373,7 @@ Game.prototype = {
 	       	//Can you actually play the music again if stopped?
 		const canPlayMusic = this.music.src.indexOf(`${pathname}/sounds/Overworld.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/Bonus.wav`) == -1 && 
 	        this.music.src.indexOf(`${pathname}/sounds/Underground.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/invincible.wav`) == -1 && 
-	        this.music.src.indexOf( != `${pathname}/sounds/Underwater.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/death.wav`) == -1 && 
+	        this.music.src.indexOf(`${pathname}/sounds/Underwater.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/death.wav`) == -1 && 
 	        this.music.src.indexOf(`${pathname}/sounds/levelClear.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/castleClear.wav`) == -1 && 
 	        this.music.src.indexOf(`${pathname}/sounds/downFlagpole.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/hurryUp.wav`) == -1 &&
 	        this.music.src.indexOf(`${pathname}/sounds/gameOver.wav`) == -1 && this.music.src.indexOf(`${pathname}/sounds/overworldToUnderground.wav`) == -1;
