@@ -1836,7 +1836,7 @@ Block.prototype = {
 				graphics.drawImage(flag, Math.round(this.drawnX-22), this.drawnY+this.offsetY+39, 40, 40);
 			} else if (this.type == "Castle" || this.type == "BigCastle") {
 				let castleFlag = new Image();
-				castleFlag.src = `${pathname}/images/castleFlag.png`;
+				castleFlag.src = `${pathname}/images/CastleFlag.png`;
 				graphics.drawImage(castleFlag, Math.round(this.drawnX+this.width/2-20), this.drawnY+this.offsetY+40, 40, 40);
 			} else if (this.directionMoving == "pulley" && !this.freeFall) {
 				let pulley = new Image();
