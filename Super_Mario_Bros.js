@@ -838,7 +838,7 @@ const gameEngine = () => {
             }
 
             if (imageSelected.img.src && mouseX >= 0 && mouseX <= 640 && mouseY >= 0 && mouseY <= height) {
-                if (imageSelected.img.src == mario.img.src) {
+                if (imageSelected.img.src.indexOf(mario.img.src) > -1) {
                     marioStartingY = Math.floor(mouseY/standardHeight)*standardHeight;
 
                     //console.log(marioStartingY);
