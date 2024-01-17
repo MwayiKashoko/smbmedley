@@ -868,7 +868,7 @@ const gameEngine = () => {
 
         if (mousedown) {
             if (imageSelected.img.src && mouseX >= 0 && mouseX <= 640 && mouseY >= 0 && mouseY < height) {
-                if (imageSelected.img.src != mario.img.src) {
+                if (imageSelected.img.src.indexOf(mario.img.src) == -1) {
                     currentLocation.area[Math.floor(mouseY/standardHeight)][Math.floor(mouseX/standardWidth)+levelOffset] = imageSelected.letter;
                 }
             }
@@ -1712,7 +1712,7 @@ const gameEngine = () => {
 
             if (state != "loading") {
                 currentGame.hudCoin.src = `${pathname}/images/hudCoin${coinImageNumber > 3 ? (coinImageNumber == 4 ? 2 : 1) : coinImageNumber}.png`;
-            } else if (currentGame.hudCoin.src != `${pathname}/images/hudCoin1.png`) {
+            }  else if (currentGame.hudCoin.src.indexOf(`${pathname}/images/hudCoin1.png`) == -1) {
                 currentGame.hudCoin.src = `${pathname}/images/hudCoin1.png`;
             }
 
@@ -2795,7 +2795,7 @@ const gameEngine = () => {
                 graphics.strokeRect(mouseX, mouseY, standardWidth, standardHeight);
             }
 
-            if (imageSelected.img.src != mario.img.src) {
+            if (imageSelected.img.src.indexOf(mario.img.src) == -1) {
                 if (imageSelected.containsImage.src && imageSelected.contains != "10 coins") {
                     graphics.drawImage(imageSelected.containsImage, mouseX+5, mouseY+5, 30, 30);
                 } else if (imageSelected.contains == "10 coins" && (imageSelected.letter.charCodeAt(0) < 65 || imageSelected.letter.charCodeAt(0) > 90)) {
