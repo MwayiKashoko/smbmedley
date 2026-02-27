@@ -85,7 +85,8 @@ let pathname = `file://${location.pathname.substr(0, location.pathname.lastIndex
 //If the game has ended then the code will reset back to the game selection screen
 let gameEnded = false;
 const frameRate = 1000 / 60;
-const doubleFrameRate = frameRate * 2;
+const doubleFrameRate = frameRate / 2;
+const halfFrameRate = frameRate * 2;
 
 window.onload = function() {
     //function declarations
