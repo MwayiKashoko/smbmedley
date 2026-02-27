@@ -84,6 +84,8 @@ let game = null;
 let pathname = `file://${location.pathname.substr(0, location.pathname.lastIndexOf("/"))}`;
 //If the game has ended then the code will reset back to the game selection screen
 let gameEnded = false;
+const frameRate = 1000 / 60;
+const doubleFrameRate = frameRate * 2;
 
 window.onload = function() {
     //function declarations
@@ -146,7 +148,8 @@ window.onload = function() {
 
         if (x > width) {
             state = "main title screen";
-            cancelAnimationFrame(frameId);
+            //cancelAnimationFrame(frameId);
+			clearTimeout(frameId);
 
             graphics.shadowBlur = 0;
             graphics.shadowOffsetX = 0;
@@ -158,7 +161,8 @@ window.onload = function() {
         }
 
     	if (state == "startup") {
-    		frameId = requestAnimationFrame(startup);
+    		//frameId = requestAnimationFrame(startup);
+			frameId = setTimeout(startup, frameRate);
     	}
     }
 
@@ -182,11 +186,13 @@ window.onload = function() {
         let frameId;
 
         if (state == "main title screen") {
-            frameId = requestAnimationFrame(titleScreen);
+            //frameId = requestAnimationFrame(titleScreen);
+			frameId = setTimeout(titleScreen, frameRate);
         } else {
             titleScreenMusic.pause();
             graphics.globalAlpha = 1;
-            cancelAnimationFrame(frameId);
+            //cancelAnimationFrame(frameId);
+			clearTimeout(frameId);
             gameSelectTransition();
         }
     }
@@ -238,12 +244,14 @@ window.onload = function() {
         if (transitionRadius <= 0) {
             state = "game select";
             graphics.font = "30px smb";
-            cancelAnimationFrame(frameId);
+            //cancelAnimationFrame(frameId);
+			clearTimeout(frameId);
             gameSelectScreen();
         }
 
         if (state == "game select transition") {
-            frameId = requestAnimationFrame(gameSelectTransition);
+            //frameId = requestAnimationFrame(gameSelectTransition);
+			frameId = setTimeout(gameSelectTransition, frameRate);
         }
     }
 
@@ -295,11 +303,13 @@ window.onload = function() {
         let frameId;
 
         if (state == "game select") {
-            frameId = requestAnimationFrame(gameSelectScreen);
+            //frameId = requestAnimationFrame(gameSelectScreen);
+			frameId = setTimeout(gameSelectScreen, frameRate);
         } else {
             gameSelectMusic.currentTime = 0;
             gameSelectMusic.pause();
-            cancelAnimationFrame(frameId);
+            //cancelAnimationFrame(frameId);
+			clearTimeout(frameId);
 
             gameEngine();
         }
