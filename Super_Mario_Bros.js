@@ -4612,6 +4612,8 @@ const gameEngine = () => {
         } else if (frameRateInUse < frameRate) {
             delay /= 2;
         }
+
+        setTimeout(updateTime, delay);
     }
 
     //console.log(gameEngine + "");
