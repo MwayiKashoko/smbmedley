@@ -36,6 +36,8 @@ const gameEngine = () => {
     let shift = 0;
     let quit = false;
 
+    let frameRateInUse = frameRate;
+
     let currentGame = new Game();
 
     let gravity = currentGame.gravity;
@@ -417,6 +419,10 @@ const gameEngine = () => {
     };
 
     let levelOffset = 0;
+
+    challengeSelect.addEventListener("change", () => {
+        frameRateInUse = frameRate;
+    });
 
     //Logic for determining what happens when a key is pressed
     document.addEventListener("keydown", (key) => {
@@ -2917,7 +2923,8 @@ const gameEngine = () => {
             currentGame.playAudio(currentLocation.terrain, gameTime);
         }
 
-        let frameId = requestAnimationFrame(update);
+        //let frameId = requestAnimationFrame(update);
+        let frameId = setTimeout(update, frameRateInUse);
 
         const newTime = new Date();
         fps++;
@@ -4418,9 +4425,13 @@ const gameEngine = () => {
                     });
                 break;
 
+                case "HalfSpeed":
+                    frameRateInUse = halfFrameRate;
+                    break;
+
                 case "DoubleSpeed":
-                    frameId = requestAnimationFrame(update);
-                break;
+                    frameRateInUse = doubleFrameRate;
+                    break;
 
                 case "HammerBros":
                     currentLocation.enemies.forEach((enemy, i, arr) => {
@@ -4567,7 +4578,8 @@ const gameEngine = () => {
 
             uploadLevelInput.value = "";
             
-            cancelAnimationFrame(frameId);
+            //cancelAnimationFrame(frameId);
+            clearTimeout(frameId);
 
             return;
         }
@@ -4592,10 +4604,18 @@ const gameEngine = () => {
             clearInterval(intervalId);
             return;
         }
+
+        let delay = 400;
+
+        if (frameRateInUse > frameRate) {
+            delay *= 2;
+        } else if (frameRateInUse < frameRate) {
+            delay /= 2;
+        }
     }
 
     //console.log(gameEngine + "");
 
     update();
-    intervalId = setInterval(updateTime, 400);
+    updateTime();
 }
