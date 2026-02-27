@@ -334,7 +334,7 @@ window.onload = function() {
             state = "game select";
             gameSelectScreen();
         }
-    }, 1000);
+    }, 10);
 
     titleScreenMusic.ontimeupdate = function() {
         if (this.currentTime >= this.duration*.991) {
